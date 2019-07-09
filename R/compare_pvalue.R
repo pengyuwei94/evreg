@@ -1,10 +1,14 @@
+#Likehood-ratio test
+#Compare two evreg objects by using chi-squared distritbuion
+#Model 1 has to be nested within model 2
+
 compare_pvalue <- function(model1, model2) {
 
-  #Check that models are specified
+  #1. Check that models are specified
   if(missing(model1)) stop("model one must be specified")
   if(missing(model2)) stop("model two must be specified")
 
-  #Check that models are 'evreg' objects
+  #2. Check that models are 'evreg' objects
   m1 <- deparse(substitute(model1))
   m2 <- deparse(substitute(model2))
   m  <- c(m1, m2)
@@ -14,13 +18,26 @@ compare_pvalue <- function(model1, model2) {
     stop("Use only with 'evreg' objects")
   }
 
-  #Check that model 2 has more parameters than model 1
-  if((!all(names(model2$coefficients) %in% names(model1$coefficients)))){
+  ##OR
+  ##if(!class(model1)[2] == "evreg" && !class(model2)[2] == "evreg"){
+  ##  stop("Use only with 'evreg' objects")}
+  ##Problem: what if there is no class(model1)[2]?
+
+
+  #3. Check that model 2 has more parameters than model 1
+  if((!all(names(model1$coefficients) %in% names(model2$coefficients))
+      #|| !all(names(model2$coefficients) %in% names(model1$coefficients))
+      )){
       warning("models may not be nested")
   }
+  #Question: How can I check if one is nested within another?
+  #          Not only model1 is nested within model2
 
-  #Check that the maximised log-likelihoods are the correct way round
+  #4. Check that the maximised log-likelihoods are the correct way round
+  ifelse(model1$loglik < 0, loglik1 = -model1$loglik, loglik1 = model1$loglik)
+  ifelse(model2$loglik < 0, loglik2 = -model2$loglik, loglik2 = model2$loglik)
 
-  p_value <- stats::pchisq(model1$loglik, model2$loglik)
+  #Compute p-value
+  p_value <- stats::pchisq(loglik1, loglik2)
   return(p_value)
 }
