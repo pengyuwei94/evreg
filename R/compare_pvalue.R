@@ -23,19 +23,19 @@ compare_pvalue <- function(model1, model2) {
   ##  stop("Use only with 'evreg' objects")}
   ##Problem: what if there is no class(model1)[2]?
 
-
   #3. Check that model 2 has more parameters than model 1
   if((!all(names(model1$coefficients) %in% names(model2$coefficients))
       #|| !all(names(model2$coefficients) %in% names(model1$coefficients))
       )){
-      warning("models may not be nested")
+      warning("make sure model1 is nested within model2")
   }
   #Question: How can I check if one is nested within another?
   #          Not only model1 is nested within model2
 
   #4. Check that the maximised log-likelihoods are the correct way round
-  ifelse(model1$loglik < 0, loglik1 = -model1$loglik, loglik1 = model1$loglik)
-  ifelse(model2$loglik < 0, loglik2 = -model2$loglik, loglik2 = model2$loglik)
+  loglik1 <- model1$loglik
+  loglik2 <- model2$loglik
+  if(loglik2 <= loglik1) stop("models may not be nested")
 
   #Compute p-value
   p_value <- stats::pchisq(loglik1, loglik2)
