@@ -1,15 +1,25 @@
 Package: evreg
-Type: Package
-Title: Extreme Value Regression
-Version: 0.1.0
-Authors@R: person("Yuwei", "Peng", email = "pengyuwei1994@gmail.com", 
-    role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Extreme value regression modelling
+Version: 1.0.0.9000
+Date: 2019-07-03
+Authors@R: c(
+    person(c("Paul", "J."), "Northrop", email = "p.northrop@ucl.ac.uk", 
+      role = c("aut", "cre", "cph")),
+    person(c("Yuwei"), "Peng", role = c("aut", "cph"))
+    )
+Description: Add a description
+Imports: graphics,
+    methods,
+    stats
+License: GPL (>= 2)
+LazyData: TRUE
 Encoding: UTF-8
-LazyData: true
-Suggests: 
-    knitr,
-    rmarkdown
+Depends:
+    R (>= 3.3.0)
+RoxygenNote: 6.1.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
+URL: http://github.com/paulnorthrop/evreg
+BugReports: http://github.com/paulnorthrop/evreg/issues
