@@ -7,7 +7,7 @@
 \method{print}{evreg}(x, digits = max(3, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{an object of class "evreg", a result of a call to
+\item{x}{an object inheriting from class "evreg", a result of a call to
 \code{\link{gevreg}}.}
 
 \item{digits}{An integer. Used for number formatting with
