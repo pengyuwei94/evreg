@@ -28,7 +28,7 @@ compare_pvalue <- function(model1, model2) {
   ##4. Check that the maximised log-likelihoods are the correct way round
   loglik1 <- model1$loglik
   loglik2 <- model2$loglik
-  if(loglik2 <= loglik1) stop("models may not be nested")
+  if(loglik2 < loglik1) stop("models may not be nested")
 
   ##Compute p-value
   p_value <- stats::pchisq(loglik1, loglik2)
