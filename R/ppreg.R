@@ -10,7 +10,7 @@
 #'
 #' @param y Either a numeric vector or the name of a variable in \code{data}.
 #'   \code{y} must not have any missing values.
-#' @param data Al data frame containing \code{y} and any covariates.
+#' @param data A data frame containing \code{y} and any covariates.
 #'   Neither \code{y} nor the covariates may have any missing values.
 #' @param p Probability quantile. This is generally a number strictly between 0 and 1.
 #' @param mu,sigma,xi Formulae (see \code{\link[stats]{formula}})
@@ -38,11 +38,15 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
     y <- deparse(substitute(y))
   }
 
+  name_invmulink <- deparse(substitute(invmulink))
+  name_invsigmalink <- deparse(substitute(invsigmalink))
+  name_invxilink <- deparse(substitute(invxilink))
   # 2. Check if the input inverse link functions are identity
-  if ((invmulink != identity) ||
-      (invsigmalink != identity) || (invxilink != identity)) {
+  if ((name_invmulink != "identity") ||
+      (name_invsigmalink != "identity") || (name_invxilink != "identity")) {
     stop("Inverse link function has to be identity for each parameter")
   }
+
 
   # 3. Check if input p is valid
   if(p > 1 || p < 0){
@@ -93,7 +97,7 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
     for (i in 2:n_sig) {
       sig_var <- names(as.data.frame(model_data$D$sigma))[i]
       name    <- append(name, sig_var)
-      sigl     <- append(sigl, i-1)
+      sigl    <- append(sigl, i-1)
     }
   }
 
@@ -117,13 +121,14 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
   # Add information to the returned object
   res <- list()
   res$call         <- Call
+
   res$data         <- model_data
   res$coefficients <- fit$mle
-  #nms <- unlist(lapply(names(model_data$D),
-  #                     function(x){
-  #                       paste(x, ": ", colnames(model_data$D[[x]]), sep = "")
-  #                     }))
-  #names(res$coefficients) <- nms
+  nms <- unlist(lapply(names(model_data$D),
+                       function(x){
+                         paste(x, ": ", colnames(model_data$D[[x]]), sep = "")
+                       }))
+  names(res$coefficients) <- nms
   res$formulae <- mp
   res$invlinks <- list(invmulink = invmulink, invsigmalink = invsigmalink,
                        invxilink = invxilink)
@@ -135,6 +140,7 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
   res$df        <- length(res$coefficients)
   class(res)    <- c("pp", "evreg")
   res$aic       <- (-2)*res$loglik + 2*(res$df)
+  res$conv      <- fit$conv
   return(res)
 
 }

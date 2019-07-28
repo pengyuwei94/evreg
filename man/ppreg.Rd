@@ -12,7 +12,7 @@ ppreg(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
 \item{y}{Either a numeric vector or the name of a variable in \code{data}.
 \code{y} must not have any missing values.}
 
-\item{data}{Al data frame containing \code{y} and any covariates.
+\item{data}{A data frame containing \code{y} and any covariates.
 Neither \code{y} nor the covariates may have any missing values.}
 
 \item{p}{Probability quantile. This is generally a number strictly between 0 and 1.}
