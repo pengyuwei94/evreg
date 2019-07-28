@@ -31,6 +31,9 @@ compare_pvalue <- function(model1, model2) {
   if(loglik2 < loglik1) stop("models may not be nested")
 
   ##Compute p-value
-  p_value <- stats::pchisq(loglik1, loglik2)
+  n1 <- length(name1)
+  n2 <- length(name2)
+  delta <- 2 * (loglik2 - loglik1)
+  p_value <- stats::pchisq(delta, n2 - n1, lower.tail = FALSE)
   return(p_value)
 }

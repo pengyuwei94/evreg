@@ -30,7 +30,7 @@ drop1_AIC_mu <- function(fit){
 
     ###Extract covariates on mu
     x_name <- all.vars(fit$formulae$mu)
-    index  <- which(colnames(X) == x_name)
+    index  <- which(colnames(X) %in% x_name)
 
     X <- X[index]   #a data frame with covariates that are in the mu formula
     name <- names(X)

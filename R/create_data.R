@@ -3,7 +3,7 @@ create_data <- function(y, data, params) {
     if (!is.null(data)){
       y <- formula(paste(y, "~ 1"))
       y <- model.response(stats::model.frame(y, data = data))
-      print(params)
+
       for (i in 1:length(params)){
         D[[i]] <- stats::model.matrix(params[[i]], data)
       }

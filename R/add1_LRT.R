@@ -60,7 +60,7 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
     x_i  <- which(p_table == min(p_table))
 
     ##check significance
-    if(min(p_table) < alpha){
+    if((!(is.nan(p_table))) & (min(p_table) < alpha)){
       output <- list()
       output$Input_fit <- fit$call
 
