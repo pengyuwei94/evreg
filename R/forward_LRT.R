@@ -9,20 +9,20 @@ forward_LRT_mu <- function(fit, alpha = 0.05){
   re_n    <- as.numeric(length(new_fit))   #length of return list from new_fit
 
   #Check if the above new_fit is full model
-  if(re_n != 1){
+  if(re_n != 2){
     if(length(new_fit$Output_fit$mu) == cov_n){
       return(new_fit)
     }else{
-      while (re_n != 1) {
+      while (re_n != 2) {
         mu      <- new_fit$Output_fit$mu
         fit     <- eval(new_fit$Output_fit$fit)
         new_fit = add1_LRT_mu(fit, alpha)
       }
 
-      return(new_fit)
     }
   }
 
+  return(new_fit)
 }
 
 

@@ -57,11 +57,14 @@ drop1_AIC_mu <- function(fit){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 
+      output$AIC        <- c(AIC(fit), min(aic))
+      names(output$AIC) <- c("Input model", "Output model")
+
       return(output)
     }else{
       output <- list()
       output$Input_fit <- fit$call
-      print("Input fit and output fit are the same.")
+      output$Note      <- ("Input fit and output fit are the same.")
 
       return(output)
     }

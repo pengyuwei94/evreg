@@ -64,12 +64,14 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 
+      output$pvalue <- p_table[x_i]
+
       return(output)
 
     }else{
       output <- list()
       output$Input_fit <- fit$call
-      print("Input fit and output fit are the same.")
+      output$Note      <- ("Input fit and output fit are the same.")
 
       return(output)
     }

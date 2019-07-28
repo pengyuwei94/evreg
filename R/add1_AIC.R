@@ -33,7 +33,7 @@ add1_AIC_mu <- function(fit){
     if(length(attr(fit$data$D$mu, "assign")) != 1){
 
       x_name <- all.vars(fit$formulae$mu)
-      index  <- which(colnames(X) == x_name)
+      index  <- which(colnames(X) %in% x_name)
 
       X <- X[-index]   #a data frame with covariates that are not in the sigma formula
 
@@ -62,11 +62,14 @@ add1_AIC_mu <- function(fit){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 
+      output$AIC        <- c(AIC(fit), min(aic))
+      names(output$AIC) <- c("Input model", "Output model")
+
       return(output)
     }else{
       output <- list()
       output$Input_fit <- fit$call
-      print("Input fit and output fit are the same.")
+      output$Note      <- ("Input fit and output fit are the same.")
 
       return(output)
     }
