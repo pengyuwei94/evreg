@@ -52,10 +52,10 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
       fit2        <- m_list[[i]]
       p_table[i]  <- compare_pvalue(fit2, fit)      #store all the p-values in one vector
     }
-    x_i  <- which(p_table == min(p_table))
+    x_i  <- which(p_table == max(p_table))
 
     ##check significance
-    if(min(p_table) < alpha){
+    if(max(p_table) > alpha){
       output <- list()
       output$Input_fit <- fit$call
 
