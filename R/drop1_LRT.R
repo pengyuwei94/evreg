@@ -1,7 +1,31 @@
-#### mu
-#### drop 1 covariate on mu based on Likelihood-ratio-test
-#### alpha equals 0.05 by default
-
+#' Drop one possible covariate on GEV parameter based on Likelihood-ratio-test
+#'
+#' Drop a single term to either mu, sigma, and xi based on likelihood-ratio-test.
+#'
+#' drop1_LRT_mu(fit, alpha = 0.05)
+#' drop1_LRT_sigma(fit, alpha = 0.05)
+#' drop1_LRT_xi(fit, alpha = 0.05)
+#'
+#' @param fit A model of class "gevreg".
+#' @param alpha Significance level. Default value is 0.05..
+#' @details Add details.
+#' @return A list which has the following components
+#'     \item{Input_fit}{The input object of the class gevreg.}
+#'     \item{Note}{A message that will be printed when input fit and output
+#'     fit are the same.}
+#'     \item{Output_fit}{A list that contains formulae for the parameter,
+#'     and the output object of the class gevreg if output fit is different
+#'     from the input fit.}
+#'     \item{pvalue}{A p value based on a likelihood-ratio-test if the input fit
+#'     and  output fit are different.}
+#' @examples
+#'
+#' ### Fremantle sea levels
+#'
+#' f3 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI)
+#' drop1_LRT_mu(f3)
+#'
+#' @export
 drop1_LRT_mu <- function(fit, alpha = 0.05){
   ##1. Check if input arguments are missing
   if(missing(fit))  stop("fit must be specified")
@@ -45,6 +69,10 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
     p_table <- c()
     m_list  <- list()
 
+    #General steps
+    # 1. Fit all of the possible models obtained by dropping 1 covariate from the original model
+    # 2. Calculate the p value between new model and original model.
+
     for(i in 1:length(name)){
       mu          <- update(fit$formulae$mu, paste("", name[i], sep = "~.-")) #update mu formula
       m_list[[i]] <- update(fit, mu = mu)           #update a model call by dropping one covariate on mu
@@ -55,12 +83,14 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
     x_i  <- which(p_table == max(p_table))
 
     ##check significance
+    # 3. If none of the p values are significant, return a list that contains three things.
+    # Otherwise, return a list of length two.
     if(max(p_table) > alpha){
       output <- list()
       output$Input_fit <- fit$call
 
       list <- list()
-      list$mu <- mu
+      list$mu  <- m_list[[x_i]]$formulae$mu
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 
