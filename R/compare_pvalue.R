@@ -1,7 +1,22 @@
-#Likehood-ratio test
-#Compare two evreg objects by using chi-squared distritbuion
-#Model 1 has to be nested within model 2
-
+#' Likehood-ratio Test for evreg Objects
+#'
+#' Compare two evreg objects by using chi-squared distritbuion
+#'
+#' compare_pvalue(model1, model2)
+#'
+#' @param model1 A model of class "evreg" which has to be nested within model 2.
+#' @param model2 A model of class "evreg".
+#' @details Add details.
+#' @return A numeric number that is between 0 to 1.
+#' @examples
+#'
+#' ### Fremantle sea levels
+#'
+#' f0 <- gevreg(SeaLevel, data = evreg::fremantle)
+#' f1 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ SOI)
+#' compare_pvalue(f0, f1)
+#'
+#' @export
 compare_pvalue <- function(model1, model2) {
 
   ##1. Check that models are specified

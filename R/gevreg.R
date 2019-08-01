@@ -112,6 +112,7 @@ gevreg <- function(y, data, mu = ~ 1, sigma = ~ 1, xi = ~ 1,
     xistart <- gevreg_xistart(model_data, xilink)
   }
   start <- c(mustart, sigmastart, xistart)
+
   # Estimate the parameters using stats::optim
   res <- stats::optim(par = start, fn = gevreg_negloglik, data = model_data,
                       invmulink = invmulink, invsigmalink = invsigmalink,
