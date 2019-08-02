@@ -20,10 +20,29 @@
 #'     are different.}
 #' @examples
 #'
-#' ### Fremantle sea levels
+#' ### Annual Maximum and Minimum Temperature
+#' # Parameter mu
+#' library(extRemes)
+#' data(PORTw)
+#' PORTw$Year <- (PORTw$Year - min(PORTw$Year)) / (max(PORTw$Year) - min(PORTw$Year))
+#' P6 <- gevreg(TMX1, data = PORTw, mu = ~MTMAX + AOindex + Year + STDTMAX + STDMIN + MDTR)
+#' drop1_AIC_mu(P6)
 #'
-#' f3 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI)
-#' drop1_AIC_mu(f3)
+#' # Parameter sigma
+#' P7 <- gevreg(TMX1, data = PORTw, mu = ~MTMAX + STDTMAX, sigma = ~MTMAX + STDTMAX)
+#' drop1_AIC_sigma(P7)
+#'
+#' # Parameter xi
+#'
+#'
+#' ### Oxford and Worthing annual maximum temperatures
+#' #Parameter mu
+#' ow$year <- (ow$year - 1901) / (1980 - 1901)
+#' ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
+#' xi = ~loc, sigmalink = identity)
+#' drop1_AIC_mu(ow1)
+#'
+#'
 #'
 #' @export
 drop1_AIC_mu <- function(fit){
@@ -36,7 +55,7 @@ drop1_AIC_mu <- function(fit){
     stop("Use only with 'evreg' objects")
   }
 
-  ##3. Check if input fit is null model
+  ##3. Check if input fit has no covariates on mu
   if(length(attr(fit$data$D$mu, "assign")) == 1){
     stop("Input fit has no covariate effects on mu")
   }
@@ -62,7 +81,8 @@ drop1_AIC_mu <- function(fit){
 
 
     #General steps
-    # 1. Fit all of the possible models obtained by dropping 1 covariate from the original model
+    # 1. Fit all of the possible models obtained by dropping 1 in mu
+    #    covariate from the original model
     # 2. Calculate the value of AIC for all these models.
     aic <- c()
     m_list <- list()
@@ -86,6 +106,89 @@ drop1_AIC_mu <- function(fit){
 
       list <- list()
       list$mu  <- m_list[[x_i]]$formulae$mu
+      list$fit <- m_list[[x_i]]$call
+      output$Output_fit <- list
+
+      output$AIC        <- c(AIC(fit), min(aic))
+      names(output$AIC) <- c("Input model", "Output model")
+
+      return(output)
+    }else{
+      output <- list()
+      output$Input_fit <- fit$call
+      output$Note      <- ("Input fit and output fit are the same.")
+
+      return(output)
+    }
+
+  }
+  #else for pp fit
+
+}
+
+
+
+drop1_AIC_sigma <- function(fit){
+  ##1. Check if input arguments are missing
+  if(missing(fit))  stop("fit must be specified")
+
+  ##2. Check if input fit is an 'evreg' objects
+  m <- deparse(substitute(fit))
+  if(!inherits(get(m, envir = parent.frame()), "evreg")){
+    stop("Use only with 'evreg' objects")
+  }
+
+  ##3. Check if input fit has no covariates on sigma
+  if(length(attr(fit$data$D$sigma, "assign")) == 1){
+    stop("Input fit has no covariate effects on sigma")
+  }
+
+  data    <- eval(fit$call$data)         #save data
+  y       <- fit$call$y                  #response variable
+  y_index <- which(colnames(data) == y)  #index of column y
+  X       <- data[-y_index]              #data only with covariates
+
+  ##identify family from the fit
+
+  ###################################################################
+  ####----------------------------GEV----------------------------####
+  ###################################################################
+  if(inherits(get(m, envir = parent.frame()), "gev")){
+
+    ###Extract covariates on sigma
+    x_name <- all.vars(fit$formulae$sigma)
+    index  <- which(colnames(X) %in% x_name)
+
+    X <- X[index]   #a data frame with covariates that are in the sigma formula
+    name <- names(X)
+
+
+    #General steps
+    # 1. Fit all of the possible models obtained by dropping 1 covariate on sigma
+    #    from the original model
+    # 2. Calculate the value of AIC for all these models.
+    aic <- c()
+    m_list <- list()
+    for(i in 1:length(name)){
+      sigma  <- update(fit$formulae$sigma, paste("", name[i], sep = "~.-"))  #update sigma formula
+      new_fit     <- update(fit, sigma = sigma)     #update fit
+      m_list[[i]] <- new_fit
+      aic[i]      <- AIC(m_list[[i]])         #get AIC for update fit
+    }
+
+    x_i  <- which(aic == min(aic))
+
+
+    # 3. Identify which of these models has the smallest AIC.
+    # 4. If this AIC is smaller than that of the current model then
+    #    return this model.  Otherwise, return the original model
+
+    if(min(aic) < AIC(fit)){
+      output <- list()
+      output$Input_fit <- fit$call
+
+      list <- list()
+      list$sigma  <- m_list[[x_i]]$formulae$sigma
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 

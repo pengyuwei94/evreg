@@ -37,7 +37,7 @@ Add details.
 ### Oxford and Worthing annual maximum temperatures
 
 ow$year <- (pjn$year - 1901) / (1980 - 1901)
-ow1 <- gevreg(y = temp, data = pjn[-3], mu = ~loc + year, sigma = ~loc,
+ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
 xi = ~loc, sigmalink = identity)
 drop1_LRT_mu(ow1)
 

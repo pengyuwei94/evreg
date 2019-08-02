@@ -32,9 +32,21 @@ Add details.
 }
 \examples{
 
-### Fremantle sea levels
+### Annual Maximum and Minimum Temperature
+# Parameter mu
+library(extRemes)
+data(PORTw)
+PORTw$Year <- (PORTw$Year - min(PORTw$Year)) / (max(PORTw$Year) - min(PORTw$Year))
+P6 <- gevreg(TMX1, data = PORTw, mu = ~MTMAX + AOindex + Year + STDTMAX + STDMIN + MDTR)
+drop1_AIC_mu(P6)
 
-f3 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI)
-drop1_AIC_mu(f3)
+
+### Oxford and Worthing annual maximum temperatures
+#Parameter mu
+ow$year <- (ow$year - 1901) / (1980 - 1901)
+ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
+xi = ~loc, sigmalink = identity)
+drop1_AIC_mu(ow1)
+
 
 }

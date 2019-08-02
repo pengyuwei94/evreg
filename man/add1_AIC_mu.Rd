@@ -33,8 +33,16 @@ Add details.
 \examples{
 
 ### Fremantle sea levels
-
+# Parameter mu
 f0 <- gevreg(SeaLevel, data = evreg::fremantle)
 add1_AIC_mu(f0)
+
+# Parameter sigma
+f3 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI)
+add1_AIC_sigma(f3)
+
+# Parameter xi
+f4 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI, sigma = ~SOI)
+add1_AIC_xi(f4)
 
 }

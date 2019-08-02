@@ -33,6 +33,14 @@ Add details.
 }
 \examples{
 
+### Oxford and Worthing annual maximum temperatures
+
+ow$year <- (ow$year - 1901) / (1980 - 1901)
+ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
+xi = ~loc, sigmalink = identity)
+backward_AIC_mu(ow1)
+
+
 ### Annual Maximum and Minimum Temperature
 
 library(extRemes)
