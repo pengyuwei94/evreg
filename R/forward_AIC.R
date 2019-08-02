@@ -26,6 +26,14 @@
 #' f0 <- gevreg(SeaLevel, data = evreg::fremantle)
 #' forward_AIC_mu(f0)
 #'
+#'
+#' ### Annual Maximum and Minimum Temperature
+#'
+#' library(extRemes)
+#' data(PORTw)
+#' PORTw$Year <- (PORTw$Year - min(PORTw$Year)) / (max(PORTw$Year) - min(PORTw$Year))
+#' P0 <- gevreg(TMX1, data = PORTw)
+#'
 #' @export
 forward_AIC_mu <- function(fit){
 
@@ -52,10 +60,27 @@ forward_AIC_mu <- function(fit){
     }else{
       while (re_n != 2 & cov_new < cov_n) {
         mu      <- new_fit$Output_fit$mu
-        fit     <- eval(new_fit$Output_fit$fit)
-        new_fit <- add1_AIC_mu(fit)
+        model   <- eval(new_fit$Output_fit$fit)
+        new_fit <- add1_AIC_mu(model)
         re_n    <- as.numeric(length(new_fit))   #length of return list from new_fit
         cov_new <- length(all.vars(new_fit$Output_fit$mu))
+      }
+      if(re_n == 2){
+        ##Make better output
+        # AIC
+        new_fit$AIC <- c(AIC(fit), AIC(model))
+        names(new_fit$AIC) <- c("Input model", "Output model")
+        # Output_fit
+        list <- list()
+        list$mu  <- mu
+        list$fit <- new_fit$Input_fit
+        new_fit$Note <- list
+        # Input_fit
+        new_fit$Input_fit <- fit$call
+
+
+        # Rename output list
+        names(new_fit) <- c("Input_fit", "Output_fit", "AIC")
       }
 
 

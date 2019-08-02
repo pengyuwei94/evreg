@@ -33,6 +33,9 @@ forward_LRT_mu <- function(fit, alpha = 0.05){
   # Number of covariates in the data
   cov_n <- ncol(eval(fit$call$data)) - 1
   new_fit <- add1_LRT_mu(fit, alpha)
+  # Store p table for later use
+  p_table <- new_fit$pvalue
+
   # The length of return list from new_fit
   # If this is equal to 3 then we have added a covariate
   # If this is equal to 2 then we haven't
@@ -52,10 +55,26 @@ forward_LRT_mu <- function(fit, alpha = 0.05){
     }else{
       while (re_n != 2 & cov_new < cov_n) {
         mu      <- new_fit$Output_fit$mu
-        fit     <- eval(new_fit$Output_fit$fit)
-        new_fit <- add1_LRT_mu(fit, alpha)
+        model   <- eval(new_fit$Output_fit$fit)
+        new_fit <- add1_LRT_mu(model, alpha)
         re_n    <- as.numeric(length(new_fit))   #length of return list from new_fit
         cov_new <- length(all.vars(new_fit$Output_fit$mu))
+      }
+      if(re_n == 2){
+        ##Make better output
+        # Output_fit
+        list <- list()
+        list$mu  <- mu
+        list$fit <- new_fit$Input_fit
+        new_fit$Note <- list
+        # Input_fit
+        new_fit$Input_fit <- fit$call
+        # Update p table
+        new_fit$pvalue <- p_table
+
+
+        # Rename output list
+        names(new_fit) <- c("Input_fit", "Output_fit", "pvalue")
       }
 
     }

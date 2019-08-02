@@ -16,8 +16,8 @@
 #'     \item{Output_fit}{A list that contains formulae for the parameter,
 #'     and the output object of the class gevreg if output fit is different
 #'     from the input fit.}
-#'     \item{pvalue}{A p value with five decimal places of the covariate
-#'     that is been added if there is one.}
+#'     \item{pvalue}{A data frame that contains p value with five decimal
+#'     places of the added covariate if there is one.}
 #' @examples
 #'
 #' ### Fremantle sea levels
@@ -76,7 +76,7 @@ add1_p_mu <- function(fit, alpha = 0.05){
     # 2. Obtain the individual p value of the added covariate.
 
     ##Likelihood-ratio-test
-    p_table <- c()
+    p_vec   <- c()
     m_list  <- list()
 
     # Preparation for updating initial values.
@@ -111,14 +111,14 @@ add1_p_mu <- function(fit, alpha = 0.05){
 
 
       fit2        <- m_list[[i]]
-      p_table[i]  <- unname(summary(fit2)$pvalue)[n_mu+1] #store all the p-values in one vector
+      p_vec[i]  <- unname(summary(fit2)$pvalue)[n_mu+1] #store all the p-values in one vector
     }
-    x_i  <- which(p_table == min(p_table))
+    x_i  <- which(p_vec == min(p_vec))
 
     ##Check significance
     # 3. If none of the p values are significant, return a list that contains three things.
     # Otherwise, return a list of length two.
-    if(min(p_table) < alpha){
+    if(min(p_vec) < alpha){
       output <- list()
       output$Input_fit <- fit$call
 
@@ -127,7 +127,9 @@ add1_p_mu <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
 
-      output$pvalue <- round(p_table[x_i],5)
+      output$pvalue <- as.data.frame(round(p_vec[x_i],5))
+      row.names(output$pvalue) <- name[x_i]
+      colnames(output$pvalue)  <- c("Pr(>|z|)")
 
       return(output)
     }else{

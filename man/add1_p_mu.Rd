@@ -19,8 +19,8 @@ A list which has the following components
     \item{Output_fit}{A list that contains formulae for the parameter,
     and the output object of the class gevreg if output fit is different
     from the input fit.}
-    \item{pvalue}{A p value with five decimal places of the covariate
-    that is been added if there is one.}
+    \item{pvalue}{A data frame that contains p value with five decimal
+    places of the added covariate if there is one.}
 }
 \description{
 Add a single term to either mu, sigma, and xi based on individual p value.

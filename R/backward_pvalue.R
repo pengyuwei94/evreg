@@ -1,11 +1,11 @@
-#' Backward Elimination on GEV Parameter based on Likelihood-ratio-test
+#' Backward Elimination on GEV Parameter using individual p value
 #'
 #' Significance controlled variable selection selects variables in either
-#' mu, sigma, and xi with backward direction based on Likelihood-ratio-test.
+#' mu, sigma, and xi with backward direction based on individual p value.
 #'
-#' backward_LRT_mu(fit, alpha = 0.05)
-#' backward_LRT_sigma(fit, alpha = 0.05)
-#' backward_LRT_xi(fit, alpha = 0.05)
+#' backward_p_mu(fit, alpha = 0.05)
+#' backward_p_sigma(fit, alpha = 0.05)
+#' backward_p_xi(fit, alpha = 0.05)
 #'
 #' @param fit A model of class "gevreg".
 #' @param alpha Significance level. Default value is 0.05..
@@ -17,20 +17,36 @@
 #'     \item{Output_fit}{A list that contains formulae for the parameter,
 #'     and the output object of the class gevreg if output fit is different
 #'     from the input fit.}
-#'     \item{pvalue}{A p value based on a likelihood-ratio-test if the input fit
-#'     and  output fit are different.}
+#'     \item{pvalue}{A data frame that contains p values with five decimal
+#'     places of the dropped covariates in order if there are.}
 #' @examples
+#'
+#' ### Fremantle sea levels
+#'
+#' f3 <- gevreg(y = SeaLevel, data = evreg::fremantle[-1], mu = ~Year01 + SOI)
+#' backward_p_mu(f3)
+#'
+#'
 #' ### Oxford and Worthing annual maximum temperatures
 #'
-#' ow$year <- (pjn$year - 1901) / (1980 - 1901)
+#' ow$year <- (ow$year - 1901) / (1980 - 1901)
 #' ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
 #' xi = ~loc, sigmalink = identity)
-#' backward_LRT_mu(ow1)
+#' backward_AIC_mu(ow1)
+#'
+#'
+#' ### Annual Maximum and Minimum Temperature
+#'
+#' library(extRemes)
+#' data(PORTw)
+#' PORTw$Year <- (PORTw$Year - min(PORTw$Year)) / (max(PORTw$Year) - min(PORTw$Year))
+#' P6 <- gevreg(TMX1, data = PORTw, mu = ~MTMAX + AOindex + Year + STDTMAX + STDMIN + MDTR)
+#' backward_p_mu(P6)
 #'
 #' @export
-backward_LRT_mu <- function(fit, alpha = 0.05){
+backward_p_mu <- function(fit, alpha = 0.05){
 
-  new_fit <- drop1_LRT_mu(fit, alpha)
+  new_fit <- drop1_p_mu(fit, alpha)
   # Store p table for later use
   p_table <- new_fit$pvalue
 
@@ -45,8 +61,8 @@ backward_LRT_mu <- function(fit, alpha = 0.05){
 
     # If we have dropped all the covariates then we stop
     # Otherwise, we try to dropp more variables, one at a time, using
-    # drop1_AIC_mu().  We stop when either
-    # 1. drop1_AIC_mu() doesn't drop a covariate (re_n = 2), or
+    # drop1_p_mu().  We stop when either
+    # 1. drop1_p_mu() doesn't drop a covariate (re_n = 2), or
     # 2. we have dropped all the covariates (var == "1")
     # Therefore, we continue to loop while re_n != 2 and var != "1"
     if(var == "1"){
@@ -55,7 +71,7 @@ backward_LRT_mu <- function(fit, alpha = 0.05){
       while (re_n != 2 & var != "1") {
         mu      <- new_fit$Output_fit$mu
         model   <- eval(new_fit$Output_fit$fit)
-        new_fit <- drop1_LRT_mu(model, alpha)
+        new_fit <- drop1_p_mu(model, alpha)
         # Improve the p value data frame from drop1_p_mu()
         new_p   <- new_fit$pvalue
         p_table <- rbind(p_table, new_p)
@@ -75,11 +91,9 @@ backward_LRT_mu <- function(fit, alpha = 0.05){
         # Update p table
         new_fit$pvalue <- p_table
 
-
         # Rename output list
         names(new_fit) <- c("Input_fit", "Output_fit", "pvalue")
       }
-
     }
 
 
