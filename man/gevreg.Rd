@@ -6,7 +6,8 @@
 \usage{
 gevreg(y, data, mu = ~1, sigma = ~1, xi = ~1, mustart, sigmastart,
   xistart, mulink = identity, sigmalink = log, xilink = identity,
-  invmulink, invsigmalink, invxilink, ...)
+  invmulink, invsigmalink, invxilink, optim_control = list(maxit =
+  10000), ...)
 }
 \arguments{
 \item{y}{Either a numeric vector or the name of a variable in \code{data}.
@@ -43,6 +44,9 @@ used if \code{mustart} is supplied, etc.}
 shape parameters to the linear predictor.  If these are supplied then
 the code does \strong{not} check that they are consistent with the link
 functions supplied in \code{mulink,sigmalink,xilink}.}
+
+\item{optim_control}{A list to be passed to \code{\link[stats]{optim}}
+as its argument \code{control}.}
 
 \item{...}{further arguments to be passed to \code{\link[stats]{optim}}.}
 }

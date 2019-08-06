@@ -34,8 +34,12 @@
 #'   shape parameters to the linear predictor.  If these are supplied then
 #'   the code does \strong{not} check that they are consistent with the link
 #'   functions supplied in \code{mulink,sigmalink,xilink}.
+#' @param optim_control A list to be passed to \code{\link[stats]{optim}}
+#'   as its argument \code{control}.
 #' @param ... further arguments to be passed to \code{\link[stats]{optim}}.
 #' @details Add details.
+#' @warning If the input data contains covariate 'year', 'year' has to be
+#'   scaled before fitting it.
 #' @return An object (list) of class \code{c("gev", "evreg")}, which has
 #'   the following components
 #'     \item{coefficients}{A named numeric vector of the estimates of the
@@ -73,7 +77,8 @@
 gevreg <- function(y, data, mu = ~ 1, sigma = ~ 1, xi = ~ 1,
                    mustart, sigmastart, xistart, mulink = identity,
                    sigmalink = log, xilink = identity, invmulink,
-                   invsigmalink, invxilink, ...) {
+                   invsigmalink, invxilink,
+                   optim_control = list(maxit = 10000), ...) {
   # Record the call for later use
   Call <- match.call()
   # Check that the data have been supplied
@@ -116,7 +121,8 @@ gevreg <- function(y, data, mu = ~ 1, sigma = ~ 1, xi = ~ 1,
   # Estimate the parameters using stats::optim
   res <- stats::optim(par = start, fn = gevreg_negloglik, data = model_data,
                       invmulink = invmulink, invsigmalink = invsigmalink,
-                      invxilink = invxilink, hessian = TRUE, ...)
+                      invxilink = invxilink, hessian = TRUE,
+                      control = optim_control, ...)
   # Add information to the returned object
   res$call <- Call
   res$data <- model_data
