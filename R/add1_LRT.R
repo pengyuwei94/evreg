@@ -88,10 +88,15 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
       # when we fit a new model in which an extra covariate is added,
       # we use starting values based on the fit of the smaller model.
       # The start value for the new added variable will be set to be zero.
+
+      mustart <- c(unname(fit$coefficients[1:ncol(fit$data$D$mu)]), 0)
+      sigmastart <- unname(fit$coefficients[(ncol(fit$data$D$mu) + 1):(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma))])
+      xistart <- unname(fit$coefficients[(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma) + 1):length(fit$coefficients)])
+
       m_list[[i]] <- update(fit, mu = mu,
-                            mustart = c(unname(fit$coefficients[1:ncol(fit$data$D$mu)]), 0),
-                            sigmastart = unname(fit$coefficients[(ncol(fit$data$D$mu) + 1):(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma))]),
-                            xistart = unname(fit$coefficients[(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma) + 1):length(fit$coefficients)]))
+                            mustart = mustart,
+                            sigmastart = sigmastart,
+                            xistart =xistart)
 
       fit2        <- m_list[[i]]
       p_vec[i]  <- compare_pvalue(fit, fit2)      #store all the p-values in one vector
