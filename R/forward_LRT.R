@@ -79,7 +79,6 @@ forward_LRT_mu <- function(fit, alpha = 0.05){
 
     }
   }
-
   return(new_fit)
 }
 

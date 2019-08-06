@@ -77,7 +77,12 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
 
     for(i in 1:length(name)){
       mu          <- update(fit$formulae$mu, paste("", name[i], sep = "~.-")) #update mu formula
-      m_list[[i]] <- update(fit, mu = mu)           #update a model call by dropping one covariate on mu
+      #update a model call by dropping one covariate on mu
+      m_list[[i]] <- update(fit, mu = mu,
+                            mustart = c((unname(fit$coefficients[1:i])), unname(fit$coefficients[((i+2):(ncol(fit$data$D$mu)))])),
+                            sigmastart = unname(fit$coefficients[(ncol(fit$data$D$mu) + 1):(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma))]),
+                            xistart = unname(fit$coefficients[(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma) + 1):length(fit$coefficients)]))
+
 
       fit2        <- m_list[[i]]
       p_vec[i]    <- compare_pvalue(fit2, fit)      #store all the p-values in one vector

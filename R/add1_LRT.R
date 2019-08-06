@@ -79,20 +79,6 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
     p_vec <- c()
     m_list  <- list()
 
-    # Preparation for updating initial values.
-    # Detail explanations are in the for loop.
-    n_sigma <- length(attr(fit$data$D$sigma, "assign"))
-    n_coeff <- length(fit$coefficients)
-
-    #muint   <- c(unname(fit$coefficients[1:n_mu]), 0)
-    #sigint  <- unname(fit$coefficients[(n_mu + 1):(n_mu + n_sigma)])
-    #xiint   <- unname(fit$coefficients[(n_mu + n_sigma + 1):n_coeff])
-
-    #muint   <- deparse(substitute(muint))
-    #sigint  <- deparse(substitute(sigint))
-    #xiint   <- deparse(substitute(xiint))
-
-
 
     for(i in 1:length(name)){
       # adding more variables on mu, one at a time
@@ -102,13 +88,10 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
       # when we fit a new model in which an extra covariate is added,
       # we use starting values based on the fit of the smaller model.
       # The start value for the new added variable will be set to be zero.
-      m_list[[i]] <- update(fit, mu = mu
-                            #,
-                            #mustart = muint,
-                            #sigmastart = sigint,
-                            #xistart = xiint
-                            )
-
+      m_list[[i]] <- update(fit, mu = mu,
+                            mustart = c(unname(fit$coefficients[1:ncol(fit$data$D$mu)]), 0),
+                            sigmastart = unname(fit$coefficients[(ncol(fit$data$D$mu) + 1):(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma))]),
+                            xistart = unname(fit$coefficients[(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma) + 1):length(fit$coefficients)]))
 
       fit2        <- m_list[[i]]
       p_vec[i]  <- compare_pvalue(fit, fit2)      #store all the p-values in one vector
@@ -132,6 +115,7 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
       colnames(output$pvalue)  <- c("LRT_pvalue")
 
       return(output)
+
     }else{
       output <- list()
       output$Input_fit <- fit$call
