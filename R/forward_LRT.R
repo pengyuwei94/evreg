@@ -29,6 +29,8 @@
 #'
 #' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
 #' forward_LRT_mu(P0)
+#' forward_LRT_sigma(P0)
+#'
 #' @name forward_LRT
 NULL
 ## NULL

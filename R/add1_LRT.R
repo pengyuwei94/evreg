@@ -29,7 +29,8 @@
 #'
 #' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
 #' add1_LRT_mu(P0)
-#'
+#' add1_LRT_sigma(P0)
+#' add1_LRT_xi(P0)
 #'
 #' @name add1_LRT
 NULL
