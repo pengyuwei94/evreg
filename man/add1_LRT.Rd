@@ -30,8 +30,7 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
     is different from the input fit.}
     \item{added_covariate}{A character vector shows added covariate}
     \item{pvalue}{A data frame that contains p value with five decimal
-    places of the Likelihood-ratio-test if the output fit
-    is different from the input fit.}
+    places of the Likelihood-ratio-test.}
 }
 \description{
 Add a single term to either mu, sigma, and xi based on likelihood-ratio-test.
@@ -50,6 +49,7 @@ add1_LRT_mu(f0)
 
 P0 <- gevreg(y = TMX1, data = PORTw[, -1])
 add1_LRT_mu(P0)
-
+add1_LRT_sigma(P0)
+add1_LRT_xi(P0)
 
 }

@@ -50,4 +50,6 @@ forward_LRT_mu(f0)
 
 P0 <- gevreg(y = TMX1, data = PORTw[, -1])
 forward_LRT_mu(P0)
+forward_LRT_sigma(P0)
+
 }

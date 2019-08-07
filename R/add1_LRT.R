@@ -16,8 +16,7 @@
 #'     is different from the input fit.}
 #'     \item{added_covariate}{A character vector shows added covariate}
 #'     \item{pvalue}{A data frame that contains p value with five decimal
-#'     places of the Likelihood-ratio-test if the output fit
-#'     is different from the input fit.}
+#'     places of the Likelihood-ratio-test.}
 #' @examples
 #' ### Fremantle sea levels
 #'
