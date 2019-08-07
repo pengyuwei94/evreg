@@ -2,31 +2,36 @@
 #'
 #' Drop a single term to either mu, sigma, and xi based on likelihood-ratio-test.
 #'
-#' drop1_LRT_mu(fit, alpha = 0.05)
-#' drop1_LRT_sigma(fit, alpha = 0.05)
-#' drop1_LRT_xi(fit, alpha = 0.05)
-#'
-#' @param fit A model of class "gevreg".
+#' @param fit An object of class \code{c("gev", "evreg")} returned from
+#'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05..
 #' @details Add details.
-#' @return A list which has the following components
-#'     \item{Input_fit}{The input object of the class gevreg.}
-#'     \item{Note}{A message that will be printed when input fit and output
-#'     fit are the same.}
+#' @return An object (a list) of class \code{c("gev", "evreg")} summarising
+#'   the new model fit (which may be the same as \code{fit}) and containing the
+#'   following additional components
+#'     \item{Input_fit}{The input object of the class \code{c("gev", "evreg")}.}
+#'     \item{Note}{A message that tells if a covariate has been added or not.}
 #'     \item{Output_fit}{A list that contains formulae for the parameter,
-#'     and the output object of the class gevreg if output fit is different
-#'     from the input fit.}
+#'     and the output object of the class \code{c("gev", "evreg")} if the output fit
+#'     is different from the input fit.}
+#'     \item{dropped_covariate}{A character vector shows dropped covariate}
 #'     \item{pvalue}{A data frame that contains p value with five decimal
 #'     places of the Likelihood-ratio-test.}
 #' @examples
 #'
 #' ### Oxford and Worthing annual maximum temperatures
 #'
-#' ow$year <- (pjn$year - 1901) / (1980 - 1901)
+#' ow$year <- (ow$year - 1901) / (1980 - 1901)
 #' ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
 #' xi = ~loc, sigmalink = identity)
 #' drop1_LRT_mu(ow1)
-#'
+#' @name drop1_LRT
+NULL
+## NULL
+
+# ----------------------------- mu ---------------------------------
+
+#' @rdname drop1_LRT
 #' @export
 drop1_LRT_mu <- function(fit, alpha = 0.05){
   ##1. Check if input arguments are missing
@@ -39,7 +44,8 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
   }
 
   ##3. Check if there are covariate effects on mu
-  if(length(attr(fit$data$D$mu, "assign")) == 1){
+  n_mu <- ncol(fit$data$D$mu)
+  if(n_mu == 1){
     stop("Input fit has no covariate effects on mu")
   }
 
@@ -67,21 +73,28 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
     X <- X[index]   #a data frame with covariates that are in the mu formula
     name <- names(X)
 
-    ##likelihood-ratio-test
-    p_vec   <- c()
-    m_list  <- list()
-
     #General steps
     # 1. Fit all of the possible models obtained by dropping 1 covariate from the original model
     # 2. Calculate the p value between new model and original model.
 
+    ##likelihood-ratio-test
+    p_vec   <- c()
+    m_list  <- list()
     for(i in 1:length(name)){
+      #dropping more variables on mu, one at a time
       mu          <- update(fit$formulae$mu, paste("", name[i], sep = "~.-")) #update mu formula
-      #update a model call by dropping one covariate on mu
+      # update a model call by dropping one covariate on mu
+      # when we fit a new model in which an covariate is dropped,
+      # we use starting values based on the fit of the larger model.
+      fcoefs  <- fit$coefficients
+      n_sigma <- ncol(fit$data$D$sigma)
+      mustart <- c((unname(fcoefs[1:i])), unname(fcoefs[((i+2):n_mu)]))
+      sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
+      xistart <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
       m_list[[i]] <- update(fit, mu = mu,
-                            mustart = c((unname(fit$coefficients[1:i])), unname(fit$coefficients[((i+2):(ncol(fit$data$D$mu)))])),
-                            sigmastart = unname(fit$coefficients[(ncol(fit$data$D$mu) + 1):(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma))]),
-                            xistart = unname(fit$coefficients[(ncol(fit$data$D$mu) + ncol(fit$data$D$sigma) + 1):length(fit$coefficients)]))
+                            mustart = mustart,
+                            sigmastart = sigmastart,
+                            xistart = xistart)
 
 
       fit2        <- m_list[[i]]
@@ -90,34 +103,35 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
     x_i  <- which(p_vec == max(p_vec))
 
     ##check significance
-    # 3. If none of the p values are significant, return a list that contains three things.
-    # Otherwise, return a list of length two.
+    # 3. If none of the p values are significant, return a new fitted object.
+    #    Otherwise, return the old fitted object.
     if(max(p_vec) > alpha){
-      output <- list()
+      output <- m_list[[x_i]]
+      output$dropped_covariate <- name[x_i]
+      output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
-
       list <- list()
       list$mu  <- m_list[[x_i]]$formulae$mu
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
-
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
       row.names(output$pvalue) <- name[x_i]
       colnames(output$pvalue)  <- c("LRT_pvalue")
 
-      return(output)
-
     }else{
-      output <- list()
+      output <- fit
+      output$dropped_covariate <- NULL
+      output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
-      output$Note      <- ("Input fit and output fit are the same.")
 
-      return(output)
     }
   }
-  #else for pp fit
-
+  return(output)
 }
 
+# ----------------------------- sigma ---------------------------------
+
+
+# ----------------------------- xi ---------------------------------
 
 
