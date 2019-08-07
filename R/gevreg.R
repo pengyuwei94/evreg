@@ -38,8 +38,9 @@
 #'   as its argument \code{control}.
 #' @param ... further arguments to be passed to \code{\link[stats]{optim}}.
 #' @details Add details.
-#' @warning If the input data contains covariate 'year', 'year' has to be
-#'   scaled before fitting it.
+#' @warning If the input data contains a covariate with values that are very
+#'   different in magnitude from other covariates' values, that covariate needed
+#'   to be scaled.
 #' @return An object (list) of class \code{c("gev", "evreg")}, which has
 #'   the following components
 #'     \item{coefficients}{A named numeric vector of the estimates of the
