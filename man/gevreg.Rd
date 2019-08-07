@@ -6,8 +6,8 @@
 \usage{
 gevreg(y, data, mu = ~1, sigma = ~1, xi = ~1, mustart, sigmastart,
   xistart, mulink = identity, sigmalink = log, xilink = identity,
-  invmulink, invsigmalink, invxilink, optim_control = list(maxit =
-  10000), ...)
+  invmulink, invsigmalink, invxilink, optim_control = list(maxit = 10000,
+  reltol = 1e-16), scale_covs = FALSE, ...)
 }
 \arguments{
 \item{y}{Either a numeric vector or the name of a variable in \code{data}.
@@ -33,7 +33,7 @@ shape parameters to the linear predictor, for example
 \code{sigmalink(sigma) =} linear predictor.
 The inverses of these functions may be supplied using
 \code{invmulink, invsigmalink, invxilink}, but, otherwise, if a link
-is one of \code{identity} \code{log} then the
+is one of \code{identity} or \code{log} then the
 corresponding inverse link function is from the link function.
 Otherwise, these functions are only
 used to set initial estimates of the parameters. \code{mulink} is not
@@ -46,7 +46,20 @@ the code does \strong{not} check that they are consistent with the link
 functions supplied in \code{mulink,sigmalink,xilink}.}
 
 \item{optim_control}{A list to be passed to \code{\link[stats]{optim}}
-as its argument \code{control}.}
+as its argument \code{control}.  The default setting in \code{gevreg}
+sets \code{maxit} to 10000 because the default in
+\code{\link[stats]{optim}} (100) may not be sufficient when there are
+several covariates and/or the initial estimates are poor.}
+
+\item{scale_covs}{A logical scalar.  Should we center and scale the
+covariate data before minmizing the negated log-likelihood using
+\code{\link[stats]{optim}}?  Doing this is advisable if the covariate
+data have very different orders of magnitude.  The results (parameter
+estimates and their estimated covariance matrix) are reported on the
+original scale either way.  The fits using \code{scale_covs = TRUE}
+and \code{scale_covs = FALSE} may be slightly different.
+\code{gevreg} sets \code{optim_control$reltol = 1e-16} to force the fits
+to be closer than they would be otherwise.}
 
 \item{...}{further arguments to be passed to \code{\link[stats]{optim}}.}
 }
@@ -66,6 +79,15 @@ likelihood estimation using the \code{\link[stats]{optim}} function.
 }
 \details{
 Add details.
+
+The default for \code{scale_covs} is \code{FALSE}.  A classic case when a
+model fit may fail under this setting is when calendar year is a covariate.
+This covariate will tend to be orders of magnitude larger than other
+covariates, which causes numerical optimisation problems.  A solution is
+to use \code{scale_covs = TRUE}.  However, it may be better to shift/scale
+the calendar year prior to calling \code{gevreg} in order to give the
+intercept of the model a more useful interpretation.  Otherwise, the
+intercept corresponds to the year 0, which is unlikely to be of interest.
 }
 \examples{
 ### Oxford-Worthing temperature data
@@ -89,6 +111,15 @@ f1 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ SOI)
 f2 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ Year01)
 # Include both SOI and year
 f3 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ Year01 + SOI)
+summary(f3)
+f3b <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ Year01 + SOI,
+              scale_covs = TRUE)
+summary(f3b)
+f3c <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ Year + SOI,
+              scale_covs = TRUE)
+summary(f3c)
+# (Note: this fit fails if scale_covs = FALSE)
+
 # Example of user-supplied link
 f3 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ Year01 + SOI,
              mulink = function(x) x, invmulink = function(x) x)
