@@ -3,9 +3,15 @@
 \name{drop1_LRT}
 \alias{drop1_LRT}
 \alias{drop1_LRT_mu}
+\alias{drop1_LRT_sigma}
+\alias{drop1_LRT_xi}
 \title{Drop one possible covariate on GEV parameter based on Likelihood-ratio-test}
 \usage{
 drop1_LRT_mu(fit, alpha = 0.05)
+
+drop1_LRT_sigma(fit, alpha = 0.05)
+
+drop1_LRT_xi(fit, alpha = 0.05)
 }
 \arguments{
 \item{fit}{An object of class \code{c("gev", "evreg")} returned from
@@ -40,4 +46,14 @@ ow$year <- (ow$year - 1901) / (1980 - 1901)
 ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
 xi = ~loc, sigmalink = identity)
 drop1_LRT_mu(ow1)
+
+
+### Annual Maximum and Minimum Temperature
+
+P3 <- gevreg(y = TMX1, data = PORTw[, -1], mu = ~MTMAX + STDTMAX + STDMIN)
+P4 <- gevreg(y = TMX1, data = PORTw[, -1], sigma = ~MTMAX + STDTMAX + STDMIN)
+P5 <- gevreg(y = TMX1, data = PORTw[, -1], xi = ~MTMAX + STDTMAX)
+drop1_LRT_mu(P3)
+drop1_LRT_sigma(P4)
+drop1_LRT_xi(P5)
 }
