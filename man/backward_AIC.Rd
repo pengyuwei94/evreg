@@ -54,5 +54,6 @@ P7 <- gevreg(TMX1, data = PORTw[,-1], sigma = ~MTMAX + STDTMAX + STDMIN + MDTR)
 P8 <- gevreg(TMX1, data = PORTw[,-1], xi = ~MTMAX + STDTMAX + STDMIN + MDTR)
 backward_AIC_mu(P6)
 backward_AIC_sigma(P7)
+backward_AIC_xi(P8)
 
 }
