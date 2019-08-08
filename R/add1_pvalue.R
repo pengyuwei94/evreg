@@ -129,7 +129,7 @@ add1_p_mu <- function(fit, alpha = 0.05){
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
       row.names(output$pvalue) <- name[x_i]
-      colnames(output$pvalue)  <- c("pvalue from Wald test")
+      colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit
       output$added_covariate <- NULL
@@ -236,7 +236,7 @@ add1_p_sigma <- function(fit, alpha = 0.05){
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
       row.names(output$pvalue) <- name[x_i]
-      colnames(output$pvalue)  <- c("pvalue from Wald test")
+      colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit
       output$added_covariate <- NULL
@@ -343,7 +343,7 @@ add1_p_xi <- function(fit, alpha = 0.05){
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
       row.names(output$pvalue) <- name[x_i]
-      colnames(output$pvalue)  <- c("pvalue from Wald test")
+      colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit
       output$added_covariate <- NULL
