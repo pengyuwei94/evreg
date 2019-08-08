@@ -156,8 +156,18 @@ gevreg <- function(y, data, mu = ~ 1, sigma = ~ 1, xi = ~ 1,
   # Estimate the parameters using stats::optim
   res <- stats::optim(par = start, fn = gevreg_negloglik, data = model_data,
                       invmulink = invmulink, invsigmalink = invsigmalink,
-                      invxilink = invxilink, hessian = TRUE,
+                      invxilink = invxilink, hessian = FALSE,
                       control = optim_control, ...)
+  # Calculate the Hessian matrix
+  hess <- try(stats::optimHess(par = res$par, fn = gevreg_negloglik,
+                               data = model_data, invmulink = invmulink,
+                               invsigmalink = invsigmalink,
+                               invxilink = invxilink))
+  if (class(hess) == "matrix") {
+    res$hessian <- hess
+  } else {
+    res$hessian <- matrix(NA, length(res$par), length(res$par))
+  }
   # Add information to the returned object
   res$call <- Call
   res$data <- model_data
