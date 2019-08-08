@@ -19,14 +19,6 @@
 #'     places of the Likelihood-ratio-test.}
 #' @examples
 #'
-#' ### Oxford and Worthing annual maximum temperatures
-#'
-#' ow$year <- (ow$year - 1901) / (1980 - 1901)
-#' ow1 <- gevreg(y = temp, data = ow[-3], mu = ~loc + year, sigma = ~loc,
-#' xi = ~loc, sigmalink = identity)
-#' drop1_LRT_mu(ow1)
-#'
-#'
 #' ### Annual Maximum and Minimum Temperature
 #'
 #' P3 <- gevreg(y = TMX1, data = PORTw[, -1], mu = ~MTMAX + STDTMAX + STDMIN)
