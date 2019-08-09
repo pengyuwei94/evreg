@@ -128,7 +128,7 @@ add1_p_mu <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("mu:", name[x_i])
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit
@@ -235,7 +235,7 @@ add1_p_sigma <- function(fit, alpha = 0.05){
       list$fit   <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("sigma:", name[x_i])
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit
@@ -342,7 +342,7 @@ add1_p_xi <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("xi:", name[x_i])
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     } else {
       output <- fit

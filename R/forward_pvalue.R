@@ -7,6 +7,11 @@
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05.
+#' @param do_mu do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
+#' @param do_sigma do forward selection on sigma after performing forward selection on mu
+#'   if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do forward selection on xi after doing forward selection on mu and signa
+#'   if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
@@ -30,12 +35,117 @@
 #' ### Annual Maximum and Minimum Temperature
 #'
 #' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
-#' forward_p_mu(P0)
-#' forward_p_sigma(P0)
-#' forward_p_xi(P0)
+#' forward_p(P0)
 #' @name forward_p
 NULL
 ## NULL
+
+
+
+#' @rdname forward_p
+#' @export
+forward_p <- function(fit, alpha = 0.05,
+                      do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
+  #1. If only performing forward selection on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == FALSE){
+    p_mu    <- forward_p_mu(fit)
+    new_fit <- p_mu
+  }
+  #2. If performing forward selection first on mu, then sigma
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
+    p_mu    <- forward_p_mu(fit)
+    p_sigma <- forward_p_sigma(p_mu)
+    new_fit <- p_sigma
+    # Make better output for criterion value
+    if(p_mu$Note == "covariate added" && p_sigma$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_mu$pvalue, p_sigma$pvalue)
+    }
+    if(p_mu$Note == "covariate added" && p_sigma$Note != "covariate added"){
+      new_fit$pvalue              <- p_mu$pvalue
+    }
+    if(p_mu$Note != "covariate added" && p_sigma$Note == "covariate added"){
+      new_fit$pvalue              <- p_sigma$pvalue
+    }
+  }
+  #3. If performing forward selection first on mu, second on sigma, then on xi
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
+    p_mu    <- forward_p_mu(fit)
+    p_sigma <- forward_p_sigma(p_mu)
+    p_xi    <- forward_p_xi(p_sigma)
+    new_fit   <- p_xi
+    # Make better output for criterion value
+    if(p_mu$Note == "covariate added" && p_sigma$Note == "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_mu$pvalue, p_sigma$pvalue,  p_xi$pvalue)
+    }
+    if(p_mu$Note == "covariate added" && p_sigma$Note != "covariate added" && p_xi$Note != "covariate added"){
+      new_fit$pvalue              <- p_mu$pvalue
+    }
+    if(p_mu$Note == "covariate added" && p_sigma$Note == "covariate added" && p_xi$Note != "covariate added"){
+      new_fit$pvalue              <- rbind(p_mu$pvalue, p_sigma$pvalue)
+    }
+    if(p_mu$Note == "covariate added" && p_sigma$Note != "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_mu$pvalue, p_xi$pvalue)
+    }
+    if(p_mu$Note != "covariate added" && p_sigma$Note != "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- p_xi$pvalue
+    }
+    if(p_mu$Note != "covariate added" && p_sigma$Note == "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_sigma$pvalue, p_xi$pvalue)
+    }
+    if(p_mu$Note != "covariate added" && p_sigma$Note == "covariate added" && p_xi$Note != "covariate added"){
+      new_fit$pvalue              <- p_sigma$pvalue
+    }
+  }
+  #4. If performing forward selection first on mu, then on xi
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
+    p_mu  <- forward_p_mu(fit)
+    p_xi  <- forward_p_xi(p_mu)
+    new_fit <- p_xi
+    # Make better output for criterion value
+    if(p_mu$Note == "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_mu$pvalue, p_xi$pvalue)
+    }
+    if(p_mu$Note == "covariate added" && p_xi$Note != "covariate added"){
+      new_fit$pvalue              <- p_mu$pvalue
+    }
+    if(p_mu$Note != "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- p_xi$pvalue
+    }
+  }
+  #5. If performing forward selection first on sigma, then on xi
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
+    p_sigma  <- forward_p_mu(fit)
+    p_xi  <- forward_p_xi(p_sigma)
+    new_fit <- p_xi
+    # Make better output for criterion value
+    if(p_sigma$Note == "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(p_sigma$pvalue, p_xi$pvalue)
+    }
+    if(p_sigma$Note == "covariate added" && p_xi$Note != "covariate added"){
+      new_fit$pvalue              <- p_sigma$pvalue
+    }
+    if(p_sigma$Note != "covariate added" && p_xi$Note == "covariate added"){
+      new_fit$pvalue              <- p_xi$pvalue
+    }
+  }
+  #6. If performing forward selection only on xi
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == TRUE){
+    p_xi  <- forward_p_xi(fit)
+    new_fit <- p_xi
+  }
+  #7. If performing forward selection only on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == FALSE){
+    p_sigma  <- forward_p_sigma(fit)
+    new_fit <- p_sigma
+  }
+  #8. If performing no forward selection on any parameters
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == FALSE){
+    new_fit <- fit
+  }
+  return(new_fit)
+}
+
+
 
 # ----------------------------- mu ---------------------------------
 

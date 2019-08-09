@@ -6,6 +6,11 @@
 #'
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
+#' @param do_mu do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
+#' @param do_sigma do forward selection on sigma after performing forward selection on mu
+#'   if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do forward selection on xi after doing forward selection on mu and signa
+#'   if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
@@ -29,15 +34,80 @@
 #' ### Annual Maximum and Minimum Temperature
 #'
 #' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
-#' forward_AIC_mu(P0)
-#' forward_AIC_sigma(P0)
-#' @name forward_LRT
+#' forward_AIC(P0)
+#' @name forward_AIC
 NULL
 ## NULL
 
+
+#' @rdname forward_AIC
+#' @export
+forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
+  #1. If only performing forward selection on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == FALSE){
+    AIC_mu  <- forward_AIC_mu(fit)
+    new_fit <- AIC_mu
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #2. If performing forward selection first on mu, then sigma
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
+    AIC_mu    <- forward_AIC_mu(fit)
+    AIC_sigma <- forward_AIC_sigma(AIC_mu)
+    new_fit   <- AIC_sigma
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #3. If performing forward selection first on mu, second on sigma, then on xi
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
+    AIC_mu    <- forward_AIC_mu(fit)
+    AIC_sigma <- forward_AIC_sigma(AIC_mu)
+    AIC_xi    <- forward_AIC_xi(AIC_sigma)
+    new_fit   <- AIC_xi
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #4. If performing forward selection first on mu, then on xi
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
+    AIC_mu  <- forward_AIC_mu(fit)
+    AIC_xi  <- forward_AIC_xi(AIC_mu)
+    new_fit <- AIC_xi
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #5. If performing forward selection first on sigma, then on xi
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
+    AIC_sigma  <- forward_AIC_mu(fit)
+    AIC_xi  <- forward_AIC_xi(AIC_sigma)
+    new_fit <- AIC_xi
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #6. If performing forward selection only on xi
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == TRUE){
+    AIC_xi  <- forward_AIC_xi(fit)
+    new_fit <- AIC_xi
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #7. If performing forward selection only on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == FALSE){
+    AIC_sigma  <- forward_AIC_sigma(fit)
+    new_fit <- AIC_sigma
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #8. If performing no forward selection on any parameters
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == FALSE){
+    new_fit <- fit
+  }
+  return(new_fit)
+}
+
+
 # ----------------------------- mu ---------------------------------
 
-#' @rdname forward_LRT
+#' @rdname forward_AIC
 #' @export
 forward_AIC_mu <- function(fit){
   # Number of covariates in the data
@@ -71,14 +141,14 @@ forward_AIC_mu <- function(fit){
         newer_fit$Note <- "covariate added"
         newer_fit$Input_fit <- fit$call
         newer_fit$AIC <- c(AIC(fit), AIC(newer_fit))
-        names(new_fit$AIC) <- c("Input model", "Output model")
+        names(newer_fit$AIC) <- c("Input model", "Output model")
         # Output_fit
         list <- list()
         list$mu  <- newer_fit$formulae$mu
         list$fit <- newer_fit$call
         newer_fit$Output_fit <- list
         # Input_fit
-        new_fit$Input_fit <- fit$call
+        newer_fit$Input_fit <- fit$call
 
       }
 
@@ -88,13 +158,13 @@ forward_AIC_mu <- function(fit){
     newer_fit <- new_fit
   }
 
-  return(new_fit)
+  return(newer_fit)
 }
 
 
 # ----------------------------- sigma ---------------------------------
 
-#' @rdname forward_LRT
+#' @rdname forward_AIC
 #' @export
 forward_AIC_sigma <- function(fit){
   # Number of covariates in the data
@@ -128,14 +198,14 @@ forward_AIC_sigma <- function(fit){
         newer_fit$Note <- "covariate added"
         newer_fit$Input_fit <- fit$call
         newer_fit$AIC <- c(AIC(fit), AIC(newer_fit))
-        names(new_fit$AIC) <- c("Input model", "Output model")
+        names(newer_fit$AIC) <- c("Input model", "Output model")
         # Output_fit
         list <- list()
         list$sigma <- newer_fit$formulae$sigma
         list$fit   <- newer_fit$call
         newer_fit$Output_fit <- list
         # Input_fit
-        new_fit$Input_fit <- fit$call
+        newer_fit$Input_fit <- fit$call
 
       }
 
@@ -145,13 +215,13 @@ forward_AIC_sigma <- function(fit){
     newer_fit <- new_fit
   }
 
-  return(new_fit)
+  return(newer_fit)
 }
 
 
 # ----------------------------- xi ---------------------------------
 
-#' @rdname forward_LRT
+#' @rdname forward_AIC
 #' @export
 forward_AIC_xi <- function(fit){
   # Number of covariates in the data
@@ -185,14 +255,14 @@ forward_AIC_xi <- function(fit){
         newer_fit$Note <- "covariate added"
         newer_fit$Input_fit <- fit$call
         newer_fit$AIC <- c(AIC(fit), AIC(newer_fit))
-        names(new_fit$AIC) <- c("Input model", "Output model")
+        names(newer_fit$AIC) <- c("Input model", "Output model")
         # Output_fit
         list <- list()
         list$xi  <- newer_fit$formulae$xi
         list$fit <- newer_fit$call
         newer_fit$Output_fit <- list
         # Input_fit
-        new_fit$Input_fit <- fit$call
+        newer_fit$Input_fit <- fit$call
 
       }
 
@@ -202,7 +272,7 @@ forward_AIC_xi <- function(fit){
     newer_fit <- new_fit
   }
 
-  return(new_fit)
+  return(newer_fit)
 }
 
 

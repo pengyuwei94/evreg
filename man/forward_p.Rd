@@ -7,6 +7,9 @@
 \alias{forward_p_xi}
 \title{Forward Selection on GEV Parameter using individual p value from Wald test}
 \usage{
+forward_p(fit, alpha = 0.05, do_mu = TRUE, do_sigma = FALSE,
+  do_xi = FALSE)
+
 forward_p_mu(fit, alpha = 0.05)
 
 forward_p_sigma(fit, alpha = 0.05)
@@ -18,6 +21,14 @@ forward_p_xi(fit, alpha = 0.05)
 \code{\link{gevreg}} summarising the current model fit.}
 
 \item{alpha}{Significance level. Default value is 0.05.}
+
+\item{do_mu}{do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.}
+
+\item{do_sigma}{do forward selection on sigma after performing forward selection on mu
+if \code{do_sigma} equals TRUE. Default is FALSE.}
+
+\item{do_xi}{do forward selection on xi after doing forward selection on mu and signa
+if \code{do_xi} equals TRUE. Default is FALSE.}
 }
 \value{
 An object (a list) of class \code{c("gev", "evreg")} summarising

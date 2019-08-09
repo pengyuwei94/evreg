@@ -6,6 +6,11 @@
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05.
+#' @param do_mu do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
+#' @param do_sigma do forward selection on sigma after performing forward selection on mu
+#'   if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do forward selection on xi after doing forward selection on mu and signa
+#'   if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
@@ -28,12 +33,117 @@
 #' ### Annual Maximum and Minimum Temperature
 #'
 #' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
-#' forward_LRT_mu(P0)
-#' forward_LRT_sigma(P0)
+#' forward_LRT(P0)
+
 #'
 #' @name forward_LRT
 NULL
 ## NULL
+
+
+#' @rdname forward_LRT
+#' @export
+forward_LRT <- function(fit, alpha = 0.05,
+                        do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
+  #1. If only performing forward selection on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == FALSE){
+    LRT_mu  <- forward_LRT_mu(fit)
+    new_fit <- LRT_mu
+  }
+  #2. If performing forward selection first on mu, then sigma
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
+    LRT_mu    <- forward_LRT_mu(fit)
+    LRT_sigma <- forward_LRT_sigma(LRT_mu)
+    new_fit   <- LRT_sigma
+   # Make better output for criterion value
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note == "covariate added"){
+     new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_sigma$pvalue)
+    }
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note != "covariate added"){
+     new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note != "covariate added" && LRT_sigma$Note == "covariate added"){
+     new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+  }
+  #3. If performing forward selection first on mu, second on sigma, then on xi
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
+    LRT_mu    <- forward_LRT_mu(fit)
+    LRT_sigma <- forward_LRT_sigma(LRT_mu)
+    LRT_xi    <- forward_LRT_xi(LRT_sigma)
+    new_fit   <- LRT_xi
+    # Make better output for criterion value
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note == "covariate added" && LRT_xi$Note == "covariate added"){
+     new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_sigma$pvalue,  LRT_xi$pvalue)
+    }
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note != "covariate added" && LRT_xi$Note != "covariate added"){
+     new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note == "covariate added" && LRT_xi$Note != "covariate added"){
+     new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_sigma$pvalue)
+    }
+    if(LRT_mu$Note == "covariate added" && LRT_sigma$Note != "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_xi$pvalue)
+    }
+    if(LRT_mu$Note != "covariate added" && LRT_sigma$Note != "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+    if(LRT_mu$Note != "covariate added" && LRT_sigma$Note == "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(LRT_sigma$pvalue, LRT_xi$pvalue)
+    }
+    if(LRT_mu$Note != "covariate added" && LRT_sigma$Note == "covariate added" && LRT_xi$Note != "covariate added"){
+      new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+  }
+  #4. If performing forward selection first on mu, then on xi
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
+    LRT_mu  <- forward_LRT_mu(fit)
+    LRT_xi  <- forward_LRT_xi(LRT_mu)
+    new_fit <- LRT_xi
+    # Make better output for criterion value
+    if(LRT_mu$Note == "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_xi$pvalue)
+    }
+    if(LRT_mu$Note == "covariate added" && LRT_xi$Note != "covariate added"){
+      new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note != "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+  }
+  #5. If performing forward selection first on sigma, then on xi
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
+    LRT_sigma  <- forward_LRT_mu(fit)
+    LRT_xi  <- forward_LRT_xi(LRT_sigma)
+    new_fit <- LRT_xi
+    # Make better output for criterion value
+    if(LRT_sigma$Note == "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- rbind(LRT_sigma$pvalue, LRT_xi$pvalue)
+    }
+    if(LRT_sigma$Note == "covariate added" && LRT_xi$Note != "covariate added"){
+      new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+    if(LRT_sigma$Note != "covariate added" && LRT_xi$Note == "covariate added"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+  }
+  #6. If performing forward selection only on xi
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == TRUE){
+    LRT_xi  <- forward_LRT_xi(fit)
+    new_fit <- LRT_xi
+  }
+  #7. If performing forward selection only on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == FALSE){
+    LRT_sigma  <- forward_LRT_sigma(fit)
+    new_fit <- LRT_sigma
+  }
+  #8. If performing no forward selection on any parameters
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == FALSE){
+    new_fit <- fit
+  }
+  return(new_fit)
+}
+
 
 # ----------------------------- mu ---------------------------------
 
