@@ -41,5 +41,9 @@ Likelihood ratio test, AIC, or p value from Wald test
 Add details.
 }
 \examples{
+### Annual Maximum and Minimum Temperature
+
+P0 <- gevreg(y = TMX1, data = PORTw[, -1])
+add1_gevreg(P0)
 
 }

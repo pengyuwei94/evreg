@@ -7,10 +7,8 @@
 #'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05.
 #' @param do_mu do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
-#' @param do_sigma do forward selection on sigma after performing forward selection on mu
-#'   if \code{do_sigma} equals TRUE. Default is FALSE.
-#' @param do_xi do forward selection on xi after doing forward selection on mu and signa
-#'   if \code{do_xi} equals TRUE. Default is FALSE.
+#' @param do_sigma do forward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do forward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
