@@ -57,6 +57,7 @@ forward_p <- function(fit, alpha = 0.05,
     p_sigma <- forward_p_sigma(p_mu)
     new_fit <- p_sigma
     # Make better output for criterion value
+    new_fit$added_covariate <- append(p_mu$added_covariate, p_sigma$added_covariate)
     if(p_mu$Note == "covariate added" && p_sigma$Note == "covariate added"){
       new_fit$pvalue              <- rbind(p_mu$pvalue, p_sigma$pvalue)
     }
@@ -74,6 +75,9 @@ forward_p <- function(fit, alpha = 0.05,
     p_xi    <- forward_p_xi(p_sigma)
     new_fit   <- p_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(p_mu$added_covariate,
+                                      p_sigma$added_covariate,
+                                      p_xi$added_covariate)
     if(p_mu$Note == "covariate added" && p_sigma$Note == "covariate added" && p_xi$Note == "covariate added"){
       new_fit$pvalue              <- rbind(p_mu$pvalue, p_sigma$pvalue,  p_xi$pvalue)
     }
@@ -102,6 +106,7 @@ forward_p <- function(fit, alpha = 0.05,
     p_xi  <- forward_p_xi(p_mu)
     new_fit <- p_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(p_mu$added_covariate, p_xi$added_covariate)
     if(p_mu$Note == "covariate added" && p_xi$Note == "covariate added"){
       new_fit$pvalue              <- rbind(p_mu$pvalue, p_xi$pvalue)
     }
@@ -118,6 +123,7 @@ forward_p <- function(fit, alpha = 0.05,
     p_xi  <- forward_p_xi(p_sigma)
     new_fit <- p_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(p_sigma$added_covariate, p_xi$added_covariate)
     if(p_sigma$Note == "covariate added" && p_xi$Note == "covariate added"){
       new_fit$pvalue              <- rbind(p_sigma$pvalue, p_xi$pvalue)
     }

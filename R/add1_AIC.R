@@ -117,7 +117,7 @@ add1_AIC_mu <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("mu:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
 
@@ -130,7 +130,7 @@ add1_AIC_mu <- function(fit){
       names(output$AIC) <- c("Input model", "Output model")
     }else{
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("mu:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -214,7 +214,7 @@ add1_AIC_sigma <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("sigma:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
 
@@ -227,7 +227,7 @@ add1_AIC_sigma <- function(fit){
       names(output$AIC) <- c("Input model", "Output model")
     }else{
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("sigma:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -312,7 +312,7 @@ add1_AIC_xi <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("xi:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
 
@@ -325,7 +325,7 @@ add1_AIC_xi <- function(fit){
       names(output$AIC) <- c("Input model", "Output model")
     }else{
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("xi:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }

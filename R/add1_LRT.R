@@ -107,7 +107,7 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
     if (min(p_vec) < alpha) {
       # Base the output mainly on the chosen fitted model object
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("mu:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
       list <- list()
@@ -119,7 +119,7 @@ add1_LRT_mu <- function(fit, alpha = 0.05){
       colnames(output$pvalue)  <- c("LRT_pvalue")
     } else {
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("mu:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -201,7 +201,7 @@ add1_LRT_sigma <- function(fit, alpha = 0.05){
     if (min(p_vec) < alpha) {
       # Base the output mainly on the chosen fitted model object
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("sigma:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
       list <- list()
@@ -213,7 +213,7 @@ add1_LRT_sigma <- function(fit, alpha = 0.05){
       colnames(output$pvalue)  <- c("LRT_pvalue")
     } else {
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("sigma:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -294,7 +294,7 @@ add1_LRT_xi <- function(fit, alpha = 0.05){
     if (min(p_vec) < alpha) {
       # Base the output mainly on the chosen fitted model object
       output <- m_list[[x_i]]
-      output$added_covariate <- name[x_i]
+      output$added_covariate <- paste0("xi:", name[x_i])
       output$Note <- "covariate added"
       output$Input_fit <- fit$call
       list <- list()
@@ -306,7 +306,7 @@ add1_LRT_xi <- function(fit, alpha = 0.05){
       colnames(output$pvalue)  <- c("LRT_pvalue")
     } else {
       output <- fit
-      output$added_covariate <- NULL
+      output$added_covariate <- paste0("xi:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }

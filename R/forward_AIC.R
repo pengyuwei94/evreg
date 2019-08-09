@@ -55,6 +55,7 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
     AIC_mu    <- forward_AIC_mu(fit)
     AIC_sigma <- forward_AIC_sigma(AIC_mu)
     new_fit   <- AIC_sigma
+    new_fit$added_covariate <- append(AIC_mu$added_covariate, AIC_sigma$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
   }
@@ -64,6 +65,9 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
     AIC_sigma <- forward_AIC_sigma(AIC_mu)
     AIC_xi    <- forward_AIC_xi(AIC_sigma)
     new_fit   <- AIC_xi
+    new_fit$added_covariate <- append(AIC_mu$added_covariate,
+                                      AIC_sigma$added_covariate,
+                                      AIC_xi$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
   }
@@ -72,6 +76,7 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
     AIC_mu  <- forward_AIC_mu(fit)
     AIC_xi  <- forward_AIC_xi(AIC_mu)
     new_fit <- AIC_xi
+    new_fit$added_covariate <- append(AIC_mu$added_covariate, AIC_xi$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
   }
@@ -80,6 +85,7 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
     AIC_sigma  <- forward_AIC_mu(fit)
     AIC_xi  <- forward_AIC_xi(AIC_sigma)
     new_fit <- AIC_xi
+    new_fit$added_covariate <- append(AIC_sigma$added_covariate, AIC_xi$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
   }

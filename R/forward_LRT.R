@@ -56,6 +56,7 @@ forward_LRT <- function(fit, alpha = 0.05,
     LRT_sigma <- forward_LRT_sigma(LRT_mu)
     new_fit   <- LRT_sigma
    # Make better output for criterion value
+    new_fit$added_covariate <- append(LRT_mu$added_covariate, LRT_sigma$added_covariate)
     if(LRT_mu$Note == "covariate added" && LRT_sigma$Note == "covariate added"){
      new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_sigma$pvalue)
     }
@@ -73,6 +74,9 @@ forward_LRT <- function(fit, alpha = 0.05,
     LRT_xi    <- forward_LRT_xi(LRT_sigma)
     new_fit   <- LRT_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(LRT_mu$added_covariate,
+                                      LRT_sigma$added_covariate,
+                                      LRT_xi$added_covariate)
     if(LRT_mu$Note == "covariate added" && LRT_sigma$Note == "covariate added" && LRT_xi$Note == "covariate added"){
      new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_sigma$pvalue,  LRT_xi$pvalue)
     }
@@ -101,6 +105,7 @@ forward_LRT <- function(fit, alpha = 0.05,
     LRT_xi  <- forward_LRT_xi(LRT_mu)
     new_fit <- LRT_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(LRT_mu$added_covariate, LRT_xi$added_covariate)
     if(LRT_mu$Note == "covariate added" && LRT_xi$Note == "covariate added"){
       new_fit$pvalue              <- rbind(LRT_mu$pvalue, LRT_xi$pvalue)
     }
@@ -117,6 +122,7 @@ forward_LRT <- function(fit, alpha = 0.05,
     LRT_xi  <- forward_LRT_xi(LRT_sigma)
     new_fit <- LRT_xi
     # Make better output for criterion value
+    new_fit$added_covariate <- append(LRT_sigma$added_covariate, LRT_xi$added_covariate)
     if(LRT_sigma$Note == "covariate added" && LRT_xi$Note == "covariate added"){
       new_fit$pvalue              <- rbind(LRT_sigma$pvalue, LRT_xi$pvalue)
     }
