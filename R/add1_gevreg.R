@@ -24,6 +24,10 @@
 #'     \item{criterion_value}{criterion value for if both input model and output model
 #'     are different.}
 #' @examples
+#' ### Annual Maximum and Minimum Temperature
+#'
+#' P0 <- gevreg(y = TMX1, data = PORTw[, -1])
+#' add1_gevreg(P0)
 #'
 #' @name add1_gevreg
 NULL
