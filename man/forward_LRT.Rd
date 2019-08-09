@@ -60,7 +60,6 @@ forward_LRT_mu(f0)
 ### Annual Maximum and Minimum Temperature
 
 P0 <- gevreg(y = TMX1, data = PORTw[, -1])
-forward_LRT_mu(P0)
-forward_LRT_sigma(P0)
+forward_LRT(P0)
 
 }

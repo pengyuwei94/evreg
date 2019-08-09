@@ -58,6 +58,5 @@ forward_AIC_mu(f0)
 ### Annual Maximum and Minimum Temperature
 
 P0 <- gevreg(y = TMX1, data = PORTw[, -1])
-forward_AIC_mu(P0)
-forward_AIC_sigma(P0)
+forward_AIC(P0)
 }
