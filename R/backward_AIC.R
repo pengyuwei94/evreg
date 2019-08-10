@@ -5,6 +5,9 @@
 #'
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
+#' @param do_mu do backward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
+#' @param do_sigma do backward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do backward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
@@ -39,6 +42,78 @@
 #' @name backward_AIC
 NULL
 ## NULL
+
+
+#' @rdname backward_AIC
+#' @export
+backward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
+  #1. If only performing backward selection on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == FALSE){
+    AIC_mu  <- backward_AIC_mu(fit)
+    new_fit <- AIC_mu
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #2. If performing backward selection first on sigma, then mu
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
+    AIC_sigma <- backward_AIC_sigma(fit)
+    AIC_mu    <- backward_AIC_mu(AIC_sigma)
+    new_fit   <- AIC_mu
+    new_fit$dropped_covariate <- append(AIC_sigma$dropped_covariate, AIC_mu$dropped_covariate)
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #3. If performing backward selection first on xi, second on sigma, then on mu
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
+    AIC_xi    <- backward_AIC_xi(fit)
+    AIC_sigma <- backward_AIC_sigma(AIC_mu)
+    AIC_mu    <- backward_AIC_mu(AIC_sigma)
+    new_fit   <- AIC_mu
+    new_fit$dropped_covariate <- append(AIC_xi$dropped_covariate,
+                                      AIC_sigma$dropped_covariate,
+                                      AIC_mu$dropped_covariate)
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #4. If performing backward selection first on xi, then on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
+    AIC_xi  <- backward_AIC_xi(fit)
+    AIC_mu  <- backward_AIC_mu(AIC_xi)
+    new_fit <- AIC_mu
+    new_fit$dropped_covariate <- append(AIC_xi$dropped_covariate, AIC_mu$dropped_covariate)
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #5. If performing backward selection first on xi, then on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
+    AIC_xi  <- backward_AIC_xi(fit)
+    AIC_sigma  <- backward_AIC_mu(AIC_xi)
+    new_fit <- AIC_sigma
+    new_fit$dropped_covariate <- append(AIC_xi$dropped_covariate, AIC_sigma$dropped_covariate)
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #6. If performing backward selection only on xi
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == TRUE){
+    AIC_xi  <- backward_AIC_xi(fit)
+    new_fit <- AIC_xi
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #7. If performing backward selection only on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == FALSE){
+    AIC_sigma  <- backward_AIC_sigma(fit)
+    new_fit <- AIC_sigma
+    new_fit$AIC <- c(AIC(fit), AIC(new_fit))
+    names(new_fit$AIC) <- c("Input model", "Output model")
+  }
+  #8. If performing no backward selection on any parameters
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == FALSE){
+    new_fit <- fit
+  }
+  return(new_fit)
+}
+
 
 # ----------------------------- mu ---------------------------------
 

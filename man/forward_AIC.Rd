@@ -21,11 +21,9 @@ forward_AIC_xi(fit)
 
 \item{do_mu}{do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.}
 
-\item{do_sigma}{do forward selection on sigma after performing forward selection on mu
-if \code{do_sigma} equals TRUE. Default is FALSE.}
+\item{do_sigma}{do forward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.}
 
-\item{do_xi}{do forward selection on xi after doing forward selection on mu and signa
-if \code{do_xi} equals TRUE. Default is FALSE.}
+\item{do_xi}{do forward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.}
 }
 \value{
 An object (a list) of class \code{c("gev", "evreg")} summarising

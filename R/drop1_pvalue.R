@@ -109,7 +109,7 @@ drop1_p_mu <- function(fit, alpha = 0.05){
                             xistart = xistart)
       # Base the output mainly on the chosen fitted model object
       output <- fit2
-      output$dropped_covariate <- drop_name
+      output$dropped_covariate <- paste0("mu:", drop_name)
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -117,11 +117,11 @@ drop1_p_mu <- function(fit, alpha = 0.05){
       list$fit <- fit2$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(largest_p, 5))
-      row.names(output$pvalue) <- drop_name
+      row.names(output$pvalue) <- paste0("mu:", drop_name)
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     }else {
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("mu:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -203,7 +203,7 @@ drop1_p_sigma <- function(fit, alpha = 0.05){
                         xistart = xistart)
       # Base the output mainly on the chosen fitted model object
       output <- fit2
-      output$dropped_covariate <- drop_name
+      output$dropped_covariate <- paste0("sigma:", drop_name)
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -211,11 +211,11 @@ drop1_p_sigma <- function(fit, alpha = 0.05){
       list$fit   <- fit2$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(largest_p, 5))
-      row.names(output$pvalue) <- drop_name
+      row.names(output$pvalue) <- paste0("sigma:", drop_name)
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     }else {
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("sigma:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -298,7 +298,7 @@ drop1_p_xi <- function(fit, alpha = 0.05){
                            xistart = xistart))
       # Base the output mainly on the chosen fitted model object
       output <- fit2
-      output$dropped_covariate <- drop_name
+      output$dropped_covariate <- paste0("xi:", drop_name)
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -306,11 +306,11 @@ drop1_p_xi <- function(fit, alpha = 0.05){
       list$fit <- fit2$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(largest_p, 5))
-      row.names(output$pvalue) <- drop_name
+      row.names(output$pvalue) <- paste0("xi:", drop_name)
       colnames(output$pvalue)  <- c("Pr(>|z|)")
     }else {
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("xi:", "NULL")
       output$Note <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }

@@ -7,6 +7,8 @@
 \alias{backward_AIC_xi}
 \title{Backward Elimination on GEV Parameter based on AIC}
 \usage{
+backward_AIC(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE)
+
 backward_AIC_mu(fit)
 
 backward_AIC_sigma(fit)
@@ -16,6 +18,12 @@ backward_AIC_xi(fit)
 \arguments{
 \item{fit}{An object of class \code{c("gev", "evreg")} returned from
 \code{\link{gevreg}} summarising the current model fit.}
+
+\item{do_mu}{do backward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.}
+
+\item{do_sigma}{do backward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.}
+
+\item{do_xi}{do backward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.}
 }
 \value{
 An object (a list) of class \code{c("gev", "evreg")} summarising

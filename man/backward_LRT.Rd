@@ -7,6 +7,9 @@
 \alias{backward_LRT_xi}
 \title{Backward Elimination on GEV Parameter based on Likelihood-ratio-test}
 \usage{
+backward_LRT(fit, alpha = 0.05, do_mu = TRUE, do_sigma = FALSE,
+  do_xi = FALSE)
+
 backward_LRT_mu(fit, alpha = 0.05)
 
 backward_LRT_sigma(fit, alpha = 0.05)
@@ -18,6 +21,12 @@ backward_LRT_xi(fit, alpha = 0.05)
 \code{\link{gevreg}} summarising the current model fit.}
 
 \item{alpha}{Significance level. Default value is 0.05.}
+
+\item{do_mu}{do backward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.}
+
+\item{do_sigma}{do backward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.}
+
+\item{do_xi}{do backward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.}
 }
 \value{
 An object (a list) of class \code{c("gev", "evreg")} summarising

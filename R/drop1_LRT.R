@@ -114,7 +114,7 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
     #    Otherwise, return the old fitted object.
     if(max(p_vec) > alpha){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("mu:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -122,12 +122,12 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("mu:", name[x_i])
       colnames(output$pvalue)  <- c("LRT_pvalue")
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("mu:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
 
@@ -219,7 +219,7 @@ drop1_LRT_sigma <- function(fit, alpha = 0.05){
     #    Otherwise, return the old fitted object.
     if(max(p_vec) > alpha){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("sigma:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -227,12 +227,12 @@ drop1_LRT_sigma <- function(fit, alpha = 0.05){
       list$fit   <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("sigma:", name[x_i])
       colnames(output$pvalue)  <- c("LRT_pvalue")
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("sigma:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
 
@@ -323,7 +323,7 @@ drop1_LRT_xi <- function(fit, alpha = 0.05){
     #    Otherwise, return the old fitted object.
     if(max(p_vec) > alpha){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("xi:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -331,12 +331,12 @@ drop1_LRT_xi <- function(fit, alpha = 0.05){
       list$fit <- m_list[[x_i]]$call
       output$Output_fit <- list
       output$pvalue <- as.data.frame(round(p_vec[x_i],5))
-      row.names(output$pvalue) <- name[x_i]
+      row.names(output$pvalue) <- paste0("xi:", name[x_i])
       colnames(output$pvalue)  <- c("LRT_pvalue")
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("xi:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
 

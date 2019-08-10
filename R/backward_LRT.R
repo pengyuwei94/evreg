@@ -7,6 +7,9 @@
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05.
+#' @param do_mu do backward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
+#' @param do_sigma do backward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.
+#' @param do_xi do backward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.
 #' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
@@ -38,6 +41,121 @@
 #' @name backward_LRT
 NULL
 ## NULL
+
+#' @name backward_LRT
+NULL
+## NULL
+
+
+#' @rdname backward_LRT
+#' @export
+backward_LRT <- function(fit, alpha = 0.05,
+                        do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
+  #1. If only performing backward selection on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == FALSE){
+    LRT_mu  <- backward_LRT_mu(fit)
+    new_fit <- LRT_mu
+  }
+  #2. If performing backward selection first on sigma, then mu
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
+    LRT_sigma <- backward_LRT_sigma(fit)
+    LRT_mu    <- backward_LRT_mu(LRT_sigma)
+    new_fit   <- LRT_mu
+    # Make better output for criterion value
+    new_fit$dropped_covariate <- append(LRT_sigma$dropped_covariate, LRT_mu$dropped_covariate)
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_sigma$pvalue, LRT_mu$pvalue)
+    }
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note != "covariate dropped"){
+      new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note != "covariate dropped" && LRT_sigma$Note == "covariate dropped"){
+      new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+  }
+  #3. If performing backward selection first on xi, second on sigma, then on mu
+  if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
+    LRT_xi    <- backward_LRT_xi(fit)
+    LRT_sigma <- backward_LRT_sigma(LRT_xi)
+    LRT_mu    <- backward_LRT_mu(LRT_sigma)
+    new_fit   <- LRT_mu
+    # Make better output for criterion value
+    new_fit$dropped_covariate <- append(LRT_xi$dropped_covariate,
+                                      LRT_sigma$dropped_covariate,
+                                      LRT_mu$dropped_covariate)
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note == "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_sigma$pvalue,  LRT_mu$pvalue)
+    }
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note != "covariate dropped" && LRT_xi$Note != "covariate dropped"){
+      new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note == "covariate dropped" && LRT_xi$Note != "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_sigma$pvalue, LRT_mu$pvalue)
+    }
+    if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note != "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_mu$pvalue)
+    }
+    if(LRT_mu$Note != "covariate dropped" && LRT_sigma$Note != "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+    if(LRT_mu$Note != "covariate dropped" && LRT_sigma$Note == "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_sigma$pvalue)
+    }
+    if(LRT_mu$Note != "covariate dropped" && LRT_sigma$Note == "covariate dropped" && LRT_xi$Note != "covariate dropped"){
+      new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+  }
+  #4. If performing backward selection first on xi, then on mu
+  if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
+    LRT_xi  <- backward_LRT_xi(fit)
+    LRT_mu  <- backward_LRT_mu(LRT_xi)
+    new_fit <- LRT_mu
+    # Make better output for criterion value
+    new_fit$dropped_covariate <- append(LRT_xi$dropped_covariate, LRT_mu$dropped_covariate)
+    if(LRT_mu$Note == "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_mu$pvalue)
+    }
+    if(LRT_mu$Note == "covariate dropped" && LRT_xi$Note != "covariate dropped"){
+      new_fit$pvalue              <- LRT_mu$pvalue
+    }
+    if(LRT_mu$Note != "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+  }
+  #5. If performing backward selection first on xi, then on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
+    LRT_xi  <- backward_LRT_xi(fit)
+    LRT_sigma  <- backward_LRT_mu(LRT_xi)
+    new_fit <- LRT_sigma
+    # Make better output for criterion value
+    new_fit$dropped_covariate <- append(LRT_xi$dropped_covariate, LRT_sigma$dropped_covariate)
+    if(LRT_sigma$Note == "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_sigma$pvalue)
+    }
+    if(LRT_sigma$Note == "covariate dropped" && LRT_xi$Note != "covariate dropped"){
+      new_fit$pvalue              <- LRT_sigma$pvalue
+    }
+    if(LRT_sigma$Note != "covariate dropped" && LRT_xi$Note == "covariate dropped"){
+      new_fit$pvalue              <- LRT_xi$pvalue
+    }
+  }
+  #6. If performing backward selection only on xi
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == TRUE){
+    LRT_xi  <- backward_LRT_xi(fit)
+    new_fit <- LRT_xi
+  }
+  #7. If performing backward selection only on sigma
+  if(do_mu == FALSE && do_sigma == TRUE && do_xi == FALSE){
+    LRT_sigma  <- backward_LRT_sigma(fit)
+    new_fit <- LRT_sigma
+  }
+  #8. If performing no backward selection on any parameters
+  if(do_mu == FALSE && do_sigma == FALSE && do_xi == FALSE){
+    new_fit <- fit
+  }
+  return(new_fit)
+}
+
 
 # ----------------------------- mu ---------------------------------
 

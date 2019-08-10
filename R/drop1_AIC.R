@@ -117,7 +117,7 @@ drop1_AIC_mu <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("mu:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -130,7 +130,7 @@ drop1_AIC_mu <- function(fit){
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("mu:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -220,7 +220,7 @@ drop1_AIC_sigma <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("sigma:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -233,7 +233,7 @@ drop1_AIC_sigma <- function(fit){
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("sigma:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
@@ -321,7 +321,7 @@ drop1_AIC_xi <- function(fit){
 
     if(min(aic) < AIC(fit)){
       output <- m_list[[x_i]]
-      output$dropped_covariate <- name[x_i]
+      output$dropped_covariate <- paste0("xi:", name[x_i])
       output$Note <- "covariate dropped"
       output$Input_fit <- fit$call
       list <- list()
@@ -334,7 +334,7 @@ drop1_AIC_xi <- function(fit){
 
     }else{
       output <- fit
-      output$dropped_covariate <- NULL
+      output$dropped_covariate <- paste0("xi:", "NULL")
       output$Note      <- "Input fit and output fit are the same"
       output$Input_fit <- fit$call
     }
