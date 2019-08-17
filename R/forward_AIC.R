@@ -236,7 +236,7 @@ forward_AIC_xi <- function(fit){
 
   #Check if the above new_fit is full model
   if(new_fit$Note == "covariate added"){
-    cov_new <- length(all.vars(newer_fit$formulae$xi))
+    cov_new <- length(all.vars(new_fit$formulae$xi))
     # If we have added all the covariates then we stop
     # Otherwise, we try adding more variables, one at a time, using
     # add1_AIC_xi().  We stop when either
@@ -250,7 +250,7 @@ forward_AIC_xi <- function(fit){
       while (newer_fit$Note == "covariate added" & cov_new < cov_n) {
         newer_fit <- add1_AIC_xi(new_fit)
         added     <- append(added, newer_fit$added_covariate)
-        cov_new   <- length(all.vars(new_fit$Output_fit$xi))
+        cov_new   <- length(all.vars(newer_fit$Output_fit$xi))
         new_fit   <- newer_fit
       }
       # Make better output
