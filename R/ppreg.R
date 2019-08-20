@@ -132,7 +132,7 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
   res$formulae <- mp
   res$invlinks <- list(invmulink = invmulink, invsigmalink = invsigmalink,
                        invxilink = invxilink)
-  #res$residuals <-
+  res$residuals <- fit$data
   res$loglik    <- -fit$nllh
   res$threshold <- y_thresh
   res$cov       <- fit$cov
