@@ -29,11 +29,11 @@ plot.evreg <- function(x, y = NULL, ...) {
   model <- class(x)[1]
   n <- length(x$residuals)
   xvals <- (1:n) / (n + 1)
-  my_xlab <- "ordered residuals"
+  my_ylab <- "ordered residuals"
   if (model == "gev") {
-    my_ylab <- "Gumbel quantiles"
+    my_xlab <- "Gumbel quantiles"
   } else if (model == "pp") {
-    my_ylab <- "exponential quantiles"
+    my_xlab <- "exponential quantiles"
   }
   my_plot <- function(x, y, ..., xlab = my_xlab, ylab = my_ylab) {
     graphics::plot(x = x, y = y, ..., xlab = xlab, ylab = ylab)
