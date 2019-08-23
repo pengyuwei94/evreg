@@ -21,10 +21,7 @@
 #' all parameters and constant shape parameter can be fitted.
 #' Different optimization methods may result in wildly different parameter estimates.
 
-
-
-
-
+#' @export
 ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
                   mustart, sigmastart, xistart, invmulink = identity,
                   invsigmalink = identity, invxilink = identity, ...){
@@ -103,12 +100,12 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
 
   y <- model_data$y  #a numeric vector
   if (length(name) == 0) {
-    y_thresh <- predict(rq(y ~ 1, p))
+    y_thresh <- predict(quantreg::rq(y ~ 1, p))
 
   }else{
     index    <- which(colnames(data) == name)
     X        <- data[index]
-    y_thresh <- predict(rq(y ~ X, p))
+    y_thresh <- predict(quantreg::rq(y ~ X, p))
 
   }
 

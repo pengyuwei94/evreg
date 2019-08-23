@@ -10,7 +10,9 @@ Authors@R: c(
 Description: Add a description
 Imports: graphics,
     methods,
-    stats
+    stats,
+    quantreg,
+    ismev
 License: GPL (>= 2)
 LazyData: TRUE
 Encoding: UTF-8
