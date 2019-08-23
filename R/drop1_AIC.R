@@ -101,6 +101,7 @@ drop1_AIC_mu <- function(fit){
       # components of xistart to 0, i.e. the Gumbel case.
       xistart <- rep(0, length(fcoefs) - n_mu - n_sigma)
       new_fit     <- update(fit, mu = mu,
+                            sigma = fit$formulae$sigma, xi = fit$formulae$xi,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart = xistart)
@@ -203,7 +204,7 @@ drop1_AIC_sigma <- function(fit){
       # there is a constraint on the parameter space.  To avoid this set all
       # components of xistart to 0, i.e. the Gumbel case.
       xistart <- rep(0, length(fcoefs) - n_mu - n_sigma)
-      new_fit     <- update(fit, sigma = sigma,
+      new_fit     <- update(fit, sigma = sigma, xi = fit$formulae$xi,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart = xistart)

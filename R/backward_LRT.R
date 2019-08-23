@@ -81,7 +81,8 @@ backward_LRT <- function(fit, alpha = 0.05,
     new_fit   <- LRT_mu
     # Make better output for criterion value
     new_fit$dropped_covariate <- append(LRT_xi$dropped_covariate,
-                                      LRT_sigma$dropped_covariate,
+                                      LRT_sigma$dropped_covariate)
+    new_fit$dropped_covariate <- append(new_fit$dropped_covariate,
                                       LRT_mu$dropped_covariate)
     if(LRT_mu$Note == "covariate dropped" && LRT_sigma$Note == "covariate dropped" && LRT_xi$Note == "covariate dropped"){
       new_fit$pvalue              <- rbind(LRT_xi$pvalue, LRT_sigma$pvalue,  LRT_mu$pvalue)

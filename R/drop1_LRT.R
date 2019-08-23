@@ -100,6 +100,7 @@ drop1_LRT_mu <- function(fit, alpha = 0.05){
       # components of xistart to 0, i.e. the Gumbel case.
       xistart <- rep(0, length(fcoefs) - n_mu - n_sigma)
       m_list[[i]] <- update(fit, mu = mu,
+                            sigma = fit$formulae$sigma, xi = fit$formulae$xi,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart = xistart)
@@ -204,7 +205,7 @@ drop1_LRT_sigma <- function(fit, alpha = 0.05){
       # there is a constraint on the parameter space.  To avoid this set all
       # components of xistart to 0, i.e. the Gumbel case.
       xistart <- rep(0, length(fcoefs) - n_mu - n_sigma)
-      m_list[[i]] <- (update(fit, sigma = sigma,
+      m_list[[i]] <- (update(fit, sigma = sigma, xi = fit$formulae$xi,
                              mustart = mustart,
                              sigmastart = sigmastart,
                              xistart = xistart))

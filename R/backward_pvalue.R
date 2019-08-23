@@ -72,7 +72,8 @@ backward_p <- function(fit, alpha = 0.05,
     new_fit   <- p_mu
     # Make better output for criterion value
     new_fit$dropped_covariate <- append(p_xi$dropped_covariate,
-                                      p_sigma$dropped_covariate,
+                                      p_sigma$dropped_covariate)
+    new_fit$dropped_covariate <- append(new_fit$dropped_covariate,
                                       p_mu$dropped_covariate)
     if(p_mu$Note == "covariate dropped" && p_sigma$Note == "covariate dropped" && p_xi$Note == "covariate dropped"){
       new_fit$pvalue              <- rbind(p_xi$pvalue, p_sigma$pvalue,  p_mu$pvalue)

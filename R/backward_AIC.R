@@ -70,7 +70,8 @@ backward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
     AIC_mu    <- backward_AIC_mu(AIC_sigma)
     new_fit   <- AIC_mu
     new_fit$dropped_covariate <- append(AIC_xi$dropped_covariate,
-                                      AIC_sigma$dropped_covariate,
+                                      AIC_sigma$dropped_covariate)
+    new_fit$dropped_covariate <- append(new_fit$dropped_covariate,
                                       AIC_mu$dropped_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
