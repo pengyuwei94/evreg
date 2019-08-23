@@ -51,18 +51,7 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
   #2. If performing forward selection first on mu, then sigma
   if(do_mu == TRUE && do_sigma == TRUE && do_xi == FALSE){
     AIC_mu    <- forward_AIC_mu(fit)
-    # Input preparation for forward selection on sigma
-    n_mu       <- ncol(AIC_mu$data$D$mu)
-    n_sigma    <- ncol(AIC_mu$data$D$sigma)
-    fcoefs     <- AIC_mu$coefficients
-    mustart    <- unname(fcoefs[1:n_mu])
-    sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
-    xistart    <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-    mu         <- AIC_mu$formulae$mu
-    fit_mu     <- update(AIC_mu$Output$fit, mu = mu, mustart = mustart,
-                         sigmastart = sigmastart, xistart = xistart)
-
-    AIC_sigma <- forward_AIC_sigma(fit_mu)
+    AIC_sigma <- forward_AIC_sigma(AIC_mu)
     new_fit   <- AIC_sigma
     new_fit$added_covariate <- append(AIC_mu$added_covariate, AIC_sigma$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
@@ -71,29 +60,12 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
   #3. If performing forward selection first on mu, second on sigma, then on xi
   if(do_mu == TRUE && do_sigma == TRUE && do_xi == TRUE){
     AIC_mu    <- forward_AIC_mu(fit)
-    # Input preparation for forward selection on sigma
-    #n_mu       <- ncol(AIC_mu$data$D$mu)
-    #n_sigma    <- ncol(AIC_mu$data$D$sigma)
-    #fcoefs     <- AIC_mu$coefficients
-    #mustart    <- unname(fcoefs[1:n_mu])
-    #sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
-    #xistart    <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-    #mu         <- AIC_mu$formulae$mu
-
     AIC_sigma <- forward_AIC_sigma(AIC_mu)
-    # Input preparation for forward selection on xi
-    #n_mu       <- ncol(AIC_sigma$data$D$mu)
-    #n_sigma    <- ncol(AIC_sigma$data$D$sigma)
-    #fcoefs     <- AIC_sigma$coefficients
-    #mustart    <- unname(fcoefs[1:n_mu])
-    #sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
-    #xistart    <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-    #sigma      <- AIC_sigma$formulae$sigma
-
     AIC_xi    <- forward_AIC_xi(AIC_sigma)
     new_fit   <- AIC_xi
     new_fit$added_covariate <- append(AIC_mu$added_covariate,
-                                      AIC_sigma$added_covariate,
+                                      AIC_sigma$added_covariate)
+    new_fit$added_covariate <- append(new_fit$added_covariate,
                                       AIC_xi$added_covariate)
     new_fit$AIC <- c(AIC(fit), AIC(new_fit))
     names(new_fit$AIC) <- c("Input model", "Output model")
@@ -101,15 +73,6 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
   #4. If performing forward selection first on mu, then on xi
   if(do_mu == TRUE && do_sigma == FALSE && do_xi == TRUE){
     AIC_mu  <- forward_AIC_mu(fit)
-    # Input preparation for forward selection on xi
-    #n_mu       <- ncol(AIC_mu$data$D$mu)
-    #n_sigma    <- ncol(AIC_mu$data$D$sigma)
-    #fcoefs     <- AIC_mu$coefficients
-    #mustart    <- unname(fcoefs[1:n_mu])
-    #sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
-    #xistart    <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-    #mu         <- AIC_mu$formulae$mu
-
     AIC_xi  <- forward_AIC_xi(AIC_mu)
     new_fit <- AIC_xi
     new_fit$added_covariate <- append(AIC_mu$added_covariate, AIC_xi$added_covariate)
@@ -119,15 +82,6 @@ forward_AIC <- function(fit, do_mu = TRUE, do_sigma = FALSE, do_xi = FALSE){
   #5. If performing forward selection first on sigma, then on xi
   if(do_mu == FALSE && do_sigma == TRUE && do_xi == TRUE){
     AIC_sigma  <- forward_AIC_mu(fit)
-    # Input preparation for forward selection on xi
-    #n_mu       <- ncol(AIC_sigma$data$D$mu)
-    #n_sigma    <- ncol(AIC_sigma$data$D$sigma)
-    #fcoefs     <- AIC_sigma$coefficients
-    #mustart    <- unname(fcoefs[1:n_mu])
-    #sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
-    #xistart    <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-    #sigma      <- AIC_sigma$formulae$sigma
-
     AIC_xi  <- forward_AIC_xi(AIC_sigma)
     new_fit <- AIC_xi
     new_fit$added_covariate <- append(AIC_sigma$added_covariate, AIC_xi$added_covariate)

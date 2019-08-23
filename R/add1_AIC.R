@@ -198,7 +198,7 @@ add1_AIC_sigma <- function(fit){
       mustart <- unname(fcoefs[1:n_mu])
       sigmastart <- c(unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)]), 0)
       xistart <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-      new_fit     <- update(fit, sigma = sigma,
+      new_fit     <- update(fit, mu = fit$formulae$mu, sigma = sigma,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart =xistart)     #update fit
@@ -296,7 +296,8 @@ add1_AIC_xi <- function(fit){
       mustart <- unname(fcoefs[1:n_mu])
       sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
       xistart <- c(unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)]), 0)
-      new_fit <- try(update(fit, xi = xi,
+      new_fit <- try(update(fit, mu = fit$formulae$mu, sigma = fit$formulae$sigma,
+                            xi = xi,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart =xistart))     #update fit

@@ -204,7 +204,7 @@ add1_p_sigma <- function(fit, alpha = 0.05){
       mustart <- unname(fcoefs[1:n_mu])
       sigmastart <- c(unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)]), 0)
       xistart <- unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)])
-      m_list[[i]] <- update(fit, sigma = sigma,
+      m_list[[i]] <- update(fit, mu = fit$formulae$mu, sigma = sigma,
                             mustart = mustart,
                             sigmastart = sigmastart,
                             xistart = xistart)
@@ -312,7 +312,8 @@ add1_p_xi <- function(fit, alpha = 0.05){
       mustart <- unname(fcoefs[1:n_mu])
       sigmastart <- unname(fcoefs[(n_mu + 1):(n_mu + n_sigma)])
       xistart <- c(unname(fcoefs[(n_mu + n_sigma + 1):length(fcoefs)]), 0)
-      m_list[[i]] <- try(update(fit, xi = xi,
+      m_list[[i]] <- try(update(fit, mu = fit$formulae$mu, sigma = fit$formulae$sigma,
+                                xi = xi,
                                mustart = mustart,
                                sigmastart = sigmastart,
                                xistart = xistart))
