@@ -19,8 +19,16 @@
 #'  distribution.
 #' @return Nothing is returned, only the plot is produced.
 #' @examples
+#' # GEV
 #' f1 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ SOI)
 #' plot(f1)
+#'
+#' # PP (no coavriates)
+#' pp <- ppreg(y = SeaLevel, data = fremantle[, -1])
+#' plot(pp)
+#'
+#' # PP regression
+#' pp <- ppreg(y = SeaLevel, data = fremantle[, -1], mu = ~SOI)
 #' @export
 plot.evreg <- function(x, y = NULL, ...) {
   if (!inherits(x, "evreg")) {
@@ -32,13 +40,15 @@ plot.evreg <- function(x, y = NULL, ...) {
   my_ylab <- "ordered residuals"
   if (model == "gev") {
     my_xlab <- "Gumbel quantiles"
+    xvals <- -log(-log(xvals))
   } else if (model == "pp") {
     my_xlab <- "exponential quantiles"
+    xvals <- -log(1 - xvals)
   }
   my_plot <- function(x, y, ..., xlab = my_xlab, ylab = my_ylab) {
     graphics::plot(x = x, y = y, ..., xlab = xlab, ylab = ylab)
   }
-  my_plot(x = -log(-log(xvals)), y = sort(x$residuals), ...)
+  my_plot(x = xvals, y = sort(x$residuals), ...)
   graphics::abline(0, 1, lty = 1, col = "blue")
   if (model == "gev") {
     my_title <- "Residual QQ Plot (Gumbel Scale)"

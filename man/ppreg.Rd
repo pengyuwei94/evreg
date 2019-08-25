@@ -30,3 +30,9 @@ Quantile regression has been used to set a threshold for which the
 probability \code{p} of threshold exceedance is approximatly constant
 across different values of covarites.
 }
+\details{
+\strong{Warning}. At the moment, only models with identity inverse link
+function for all parameters and constant shape parameter can be fitted.
+Different optimization methods may result in wildly different parameter
+estimates.
+}

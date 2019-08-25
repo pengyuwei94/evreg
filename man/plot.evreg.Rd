@@ -32,6 +32,14 @@ If \code{x} was returned from \code{\link{gevreg}} then the
  distribution.
 }
 \examples{
+# GEV
 f1 <- gevreg(SeaLevel, data = evreg::fremantle, mu = ~ SOI)
 plot(f1)
+
+# PP (no coavriates)
+pp <- ppreg(y = SeaLevel, data = fremantle[, -1])
+plot(pp)
+
+# PP regression
+pp <- ppreg(y = SeaLevel, data = fremantle[, -1], mu = ~SOI)
 }

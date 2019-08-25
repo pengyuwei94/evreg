@@ -17,9 +17,11 @@
 #'   for the PP parameters \code{mu} (location), \code{sigma} (scale),
 #'   e.g. \code{mu = ~ x}. Parameter \code{xi} (shape) is holded as fixed.
 #'
-#' @Warning At the moment, only models with identity inverse link function for
-#' all parameters and constant shape parameter can be fitted.
-#' Different optimization methods may result in wildly different parameter estimates.
+#' @details
+#' \strong{Warning}. At the moment, only models with identity inverse link
+#' function for all parameters and constant shape parameter can be fitted.
+#' Different optimization methods may result in wildly different parameter
+#' estimates.
 
 #' @export
 ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
@@ -97,19 +99,20 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
       sigl    <- append(sigl, i-1)
     }
   }
-
   y <- model_data$y  #a numeric vector
   if (length(name) == 0) {
     y_thresh <- predict(quantreg::rq(y ~ 1, p))
 
   }else{
     index    <- which(colnames(data) == name)
-    X        <- data[index]
-    y_thresh <- predict(quantreg::rq(y ~ X, p))
+    X        <- data[,index]
+    # quantreg::rq() requires a formula
+    form <- as.formula(paste("y ~ ", paste(name, collapse = "+")))
+    y_thresh <- predict(quantreg::rq(form, p, data = data))
 
   }
 
-  fit <- ismev::pp.fit(model_data$y, y_thresh, npy, ydat = name,
+  fit <- ismev::pp.fit(model_data$y, y_thresh, npy, ydat = as.matrix(X),
                        mul = mul, sigl = sigl, shl = NULL,
                        muinit = start[1], siginit = start[2], shinit = start[3],
                        mulink = invmulink, siglink = invsigmalink, shlink = invxilink,
@@ -129,7 +132,28 @@ ppreg <- function(y, data, p = 0.5, npy = 365, mu = ~1, sigma = ~1, xi = ~1,
   res$formulae <- mp
   res$invlinks <- list(invmulink = invmulink, invsigmalink = invsigmalink,
                        invxilink = invxilink)
-  res$residuals <- fit$data
+  # We need to distinguish between regression models and stationary models
+  # For the former we transform fit$data to have a unit exponential null distn
+  # For the latter we need to create the residuals from scratch then transform
+  if (fit$trans) {
+    res$residuals <- -log(fit$data)
+  } else {
+    u <- unique(fit$threshold)
+    uInd <- fit$data > u
+    xdatu <- fit$data[uInd]
+    ppp <- function (a, npy) {
+      u <- a[4]
+      la <- 1 - exp(-(1 + (a[3] * (u - a[1]))/a[2])^(-1/a[3])/npy)
+      sc <- a[2] + a[3] * (u - a[1])
+      xi <- a[3]
+      c(la, sc, xi)
+    }
+    gpd_pars <- ppp(fit$vals[1, ], fit$npy)
+    sc <- gpd_pars[2]
+    xi <- gpd_pars[3]
+    res$residuals <- as.vector((1 + (xi * (xdatu - u)) / sc) ^ (-1 / xi))
+    res$residuals <- -log(res$residuals)
+  }
   res$loglik    <- -fit$nllh
   res$threshold <- y_thresh
   res$cov       <- fit$cov
