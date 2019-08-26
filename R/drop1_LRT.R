@@ -5,7 +5,6 @@
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
 #' @param alpha Significance level. Default value is 0.05..
-#' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following additional components

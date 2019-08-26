@@ -4,7 +4,6 @@
 #'
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
-#' @details Add details.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following additional components

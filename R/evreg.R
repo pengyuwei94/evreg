@@ -52,3 +52,45 @@ NULL
 #' @source Coles, S. G. (2001) An Introduction to Statistical Modelling of
 #'   Extreme Values. London: Springer.
 "fremantle"
+
+#' Annual Maximum and Minimum Temperature
+#'
+#' Annual maximum and minimum Winter temperature (degrees centigrade)
+#' with a covariate for the North Atlantic Oscillation index from 1927 through 1995.
+#' Data is for Winter for Port Jervis, New York (PORTw) and Spring for Sept-Iles, Quebec (SEPTsp).
+#'
+#' @format A dataframe includes 68 observations and 9 columns
+#'   \itemize{
+#'     \item{\code{Year}: }{A numeric vector of the calendar year.}
+#'     \item{\code{MTMAX}: }{A numeric vector of the means of the winter maximum temperature.}
+#'     \item{\code{MTMIN}: }{A numeric vector of the means of the winter minimum temperature.}
+#'     \item{\code{STDTMAX}: }{A numeric vector of the standard deviations of the winter maximum temperature.}
+#'     \item{\code{STDMIN}: }{A numeric vector of the standard deviations of the winter minimum temperature.}
+#'     \item{\code{TMX1}: }{A numeric vector of the annual maximum winter temperature (degrees centigrade).}
+#'     \item{\code{TMN0}: }{A numeric vector of the annual minimum winter temperature (degrees centigrade).}
+#'     \item{\code{MDTR}: }{A numeric vector of the mean winter diurnal temperature range.}
+#'     \item{\code{AOindex}: }{A numeric vector of the North Atlantic Oscillation index (AOindex) from 1927 through 1995}
+#'  }
+#' @source Eric Gilleland, Richard W. Katz (2016). extRemes 2.0: An Extreme Value Analysis Package
+#'     in R. Journal of Statistical Software, 72(8), 1-39. doi:10.18637/jss.v072.i08
+"PORTw"
+
+#' Annual Winter Maximum Wave Height
+#'
+#' Annual Winter Maximum Wave Height in the North Sea from from 1/10/1954 to 31/3/2010,
+#' that is, the winters from 56 water years.
+#'
+#' @format A dataframe contains 56 rows and 6 variables
+#'   \itemize{
+#'     \item{\code{Hs}: }{A numeric vector of the largest storm maximum value (in metres) observed
+#'     over a given winter, which is a measure of sea surface roughness in the northern North Sea.}
+#'     \item{\code{waterYear}: }{A numeric vector of the year in which this winter ends
+#'     (a water year starts on 1st October)}
+#'     \item{\code{meanNAO}: }{A numeric vector of the mean value of the North Atlantic
+#'     Oscillation (NAO), which includes climate indice, over a winter.}
+#'     \item{\code{maxNAO}: }{A numeric vector of the maximum value of the NAO index over a winter.}
+#'     \item{\code{meanAO}: }{A numeric vector of the mean value of the Arctic Oscillation (AO),
+#'     which contains climate indice, over a winter.}
+#'     \item{\code{maxAO}: }{A numeric vector of the maximum value of the AO index over a winter.}
+#'   }
+"wm"

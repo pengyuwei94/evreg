@@ -4,9 +4,10 @@
 #'
 #' compare_pvalue(model1, model2)
 #'
-#' @param model1 A model of class "evreg" which has to be nested within model 2.
-#' @param model2 A model of class "evreg".
-#' @details Add details.
+#' @param model1 A model of class \code{c("gev", "evreg")}.
+#' @param model2 A model of class \code{c("gev", "evreg")}.
+#' @details
+#' Model 1 has to be nested within model 2
 #' @return A numeric number that is between 0 to 1.
 #' @examples
 #'
