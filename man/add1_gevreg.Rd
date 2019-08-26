@@ -35,10 +35,12 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
 }
 \description{
 Add a single term to either mu, sigma, and xi based on criterion
-Likelihood ratio test, AIC, or p value from Wald test
+Likelihood ratio test, AIC, or the Wald test
 }
 \details{
-Add details.
+When a new model is fitted in which an extra covariate is added,
+we use starting values based on the fit of the smaller model.
+The start value for the new added variable will be set to be zero.
 }
 \examples{
 ### Annual Maximum and Minimum Temperature

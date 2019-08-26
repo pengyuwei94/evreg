@@ -2,7 +2,7 @@
 #'
 #' Significance controlled variable selection selects variables in either
 #' mu, sigma, and xi with forward direction based on likelihood-ratio-test,
-#' AIC, or p value from Wald test.
+#' AIC, or the Wald test.
 #'
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
@@ -13,7 +13,15 @@
 #' @param do_mu do forward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
 #' @param do_sigma do forward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.
 #' @param do_xi do forward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.
-#' @details Add details.
+#' @details
+#' The function performs forward selection for an object of class \code{c("gev", "evreg")}.
+#' If \code{do_mu}, \code{do_sigma}, and \code{do_xi} all equal TRUE, then the function
+#' performs forward selection on mu first, then on sigma, and finally on xi.
+#'
+#' When a new model is fitted in which an extra covariate is added,
+#' we use starting values based on the fit of the smaller model.
+#' The start value for the new added variable will be set to be zero.
+#'
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following additional components
@@ -25,6 +33,7 @@
 #'     \item{added_covariate}{A character vector shows added covariate}
 #'     \item{criterion_value}{criterion value for if both input model and output model
 #'     are different.}
+#'
 #' @examples
 #' ### Annual Maximum and Minimum Temperature
 #'

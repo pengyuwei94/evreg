@@ -49,7 +49,13 @@
 #'   \code{gevreg} sets \code{optim_control$reltol = 1e-16} to force the fits
 #'   to be closer than they would be otherwise.
 #' @param ... further arguments to be passed to \code{\link[stats]{optim}}.
-#' @details Add details.
+#' @details
+#'
+#' Fitting a GEV regression model allows us to relex the stationary assumption.
+#' The function fits a GEV regression modelling using maximum likelihood
+#' estimation with a focus on univariate response variable.
+#' Covaraite effects are allowed by including generalized linear modelling of
+#' each parameter.
 #'
 #' The default for \code{scale_covs} is \code{FALSE}.  A classic case when a
 #' model fit may fail under this setting is when calendar year is a covariate.

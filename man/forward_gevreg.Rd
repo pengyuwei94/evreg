@@ -39,10 +39,16 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
 \description{
 Significance controlled variable selection selects variables in either
 mu, sigma, and xi with forward direction based on likelihood-ratio-test,
-AIC, or p value from Wald test.
+AIC, or the Wald test.
 }
 \details{
-Add details.
+The function performs forward selection for an object of class \code{c("gev", "evreg")}.
+If \code{do_mu}, \code{do_sigma}, and \code{do_xi} all equal TRUE, then the function
+performs forward selection on mu first, then on sigma, and finally on xi.
+
+When a new model is fitted in which an extra covariate is added,
+we use starting values based on the fit of the smaller model.
+The start value for the new added variable will be set to be zero.
 }
 \examples{
 ### Annual Maximum and Minimum Temperature

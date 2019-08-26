@@ -13,7 +13,15 @@
 #' @param do_mu do backward selection on mu if \code{do_mu} equals TRUE. Default is TRUE.
 #' @param do_sigma do backward selection on sigma if \code{do_sigma} equals TRUE. Default is FALSE.
 #' @param do_xi do backward selection on xi if \code{do_xi} equals TRUE. Default is FALSE.
-#' @details Add details.
+#' @details
+#' The function performs backward elimination for an object of class \code{c("gev", "evreg")}.
+#' When \code{do_mu}, \code{do_sigma}, and \code{do_xi} all equal TRUE, the function
+#' performs backward selection on xi first, then on sigma, and finally on mu.
+#'
+#' Non-zero components of inital value of xi may mean that the likelihood is zero
+#' at the starting values.  This is because for xi not equal to zero,
+#' there is a constraint on the parameter space.  To avoid this set all
+#' components of initial value of xi to 0, i.e. the Gumbel case.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following additional components

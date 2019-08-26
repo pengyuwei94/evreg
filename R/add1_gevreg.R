@@ -1,7 +1,7 @@
 #' Add one possible covariate on GEV parameter
 #'
 #' Add a single term to either mu, sigma, and xi based on criterion
-#' Likelihood ratio test, AIC, or p value from Wald test
+#' Likelihood ratio test, AIC, or the Wald test
 #'
 #' @param fit An object of class \code{c("gev", "evreg")} returned from
 #'   \code{\link{gevreg}} summarising the current model fit.
@@ -11,7 +11,11 @@
 #'   \code{AIC}, or \code{pvalue}(by Wald test). Default criterion is \code{pvalue}.
 #' @param alpha Significance level if criterion equals pvalue or LRT.
 #'   Default value is 0.05.
-#' @details Add details.
+#' @details
+#' When a new model is fitted in which an extra covariate is added,
+#' we use starting values based on the fit of the smaller model.
+#' The start value for the new added variable will be set to be zero.
+#'
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following additional components

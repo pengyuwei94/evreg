@@ -78,7 +78,11 @@ applied to each linear predictor.  Models are fitted using maximum
 likelihood estimation using the \code{\link[stats]{optim}} function.
 }
 \details{
-Add details.
+Fitting a GEV regression model allows us to relex the stationary assumption.
+The function fits a GEV regression modelling using maximum likelihood
+estimation with a focus on univariate response variable.
+Covaraite effects are allowed by including generalized linear modelling of
+each parameter.
 
 The default for \code{scale_covs} is \code{FALSE}.  A classic case when a
 model fit may fail under this setting is when calendar year is a covariate.

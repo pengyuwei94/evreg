@@ -38,7 +38,10 @@ Drop a single term to either mu, sigma, and xi based on criterion
 Likelihood ratio test, AIC, or p value from Wald test
 }
 \details{
-drop details.
+Non-zero components of inital value of xi may mean that the likelihood is zero
+at the starting values.  This is because for xi not equal to zero,
+there is a constraint on the parameter space.  To avoid this set all
+components of initial value of xi to 0, i.e. the Gumbel case.
 }
 \examples{
 

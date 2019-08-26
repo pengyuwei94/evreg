@@ -42,7 +42,14 @@ mu, sigma, and xi with backward direction based on likelihood-ratio-test,
 AIC, or p value from Wald test.
 }
 \details{
-Add details.
+The function performs backward elimination for an object of class \code{c("gev", "evreg")}.
+When \code{do_mu}, \code{do_sigma}, and \code{do_xi} all equal TRUE, the function
+performs backward selection on xi first, then on sigma, and finally on mu.
+
+Non-zero components of inital value of xi may mean that the likelihood is zero
+at the starting values.  This is because for xi not equal to zero,
+there is a constraint on the parameter space.  To avoid this set all
+components of initial value of xi to 0, i.e. the Gumbel case.
 }
 \examples{
 ### Annual Maximum and Minimum Temperature

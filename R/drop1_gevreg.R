@@ -11,7 +11,11 @@
 #'   \code{AIC}, or \code{pvalue}(by Wald test). Default criterion is \code{pvalue}.
 #' @param alpha Significance level if criterion equals pvalue or LRT.
 #'   Default value is 0.05.
-#' @details drop details.
+#' @details
+#' Non-zero components of inital value of xi may mean that the likelihood is zero
+#' at the starting values.  This is because for xi not equal to zero,
+#' there is a constraint on the parameter space.  To avoid this set all
+#' components of initial value of xi to 0, i.e. the Gumbel case.
 #' @return An object (a list) of class \code{c("gev", "evreg")} summarising
 #'   the new model fit (which may be the same as \code{fit}) and containing the
 #'   following dropitional components

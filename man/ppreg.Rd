@@ -21,6 +21,13 @@ Neither \code{y} nor the covariates may have any missing values.}
 for the PP parameters \code{mu} (location), \code{sigma} (scale),
 e.g. \code{mu = ~ x}. Parameter \code{xi} (shape) is holded as fixed.}
 }
+\value{
+An object (list) of class \code{c("gev", "evreg")}, which has
+the following components
+    \item{coefficients}{A named numeric vector of the estimates of the
+      model parameters.}
+    \item{se}{estimated standard errors}
+}
 \description{
 Regression modelling with a Point Process response distribution
 and generalized linear modelling of each parameter, specified by a symbolic
@@ -31,8 +38,23 @@ probability \code{p} of threshold exceedance is approximatly constant
 across different values of covarites.
 }
 \details{
+Fitting a point process regression model allows us to
+relex the stationary assumption.
+The function fits a point process regression model by setting a
+covariate-dependent threshold using a linear quantile regression.
+The goal is to keep the probability \code{p} of threshold exceedances
+retains constant across different values of the covariates. The form
+of the covariate-dependent threshold is that of Northrop and Jonathan
+(2011) Eq (5).
+
 \strong{Warning}. At the moment, only models with identity inverse link
 function for all parameters and constant shape parameter can be fitted.
 Different optimization methods may result in wildly different parameter
 estimates.
+}
+\references{
+Northrop, Paul J, and Philip Jonathan. 2011.
+"Threshold Modelling of Spatially Dependent Non-Stationary Extremes
+with Application to Hurricane-Induced WaveHeights." Environmetrics22 (7).
+Wiley Online Library: 799-809.
 }
