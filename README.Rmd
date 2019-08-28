@@ -19,9 +19,19 @@ knitr::opts_chunk$set(
 
 ### What does evreg do?
 
-The `evreg` package deals .. 
+The `evreg` package provides functions that model non-stationary extreme values using univariate extreme value regression modelling, while also performing variable selection to objectively determine the best model for a given dataset. This is achieved by using generalized linear modelling for each parameter, and by fitting models with maximum likelihood estimates.
 
 ### A simple example
+
+One of the main functions in the evreg package is `gevreg`, which performs the model fitting for generalized extreme value regression modelling. Then, `forward_gevreg` can be used to perform forward selection to objectively determine the best model. 
+The following code fits a GEV regression model using the `gevreg` function for `fremantle` dataset and then uses `forward_gevreg` perform forward selection.
+
+```{r}
+data <- fremantle[ , -which(names(fremantle) %in% c("Year"))]
+fit0 <- gevreg(SeaLevel, data)
+forward_gevreg(fit0)
+```
+
 
 
 ### Installation
