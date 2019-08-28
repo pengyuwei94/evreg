@@ -41,9 +41,6 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
 \description{
 Add a single term to either mu, sigma, and xi based on likelihood-ratio-test.
 }
-\details{
-Add details.
-}
 \examples{
 ### Fremantle sea levels
 

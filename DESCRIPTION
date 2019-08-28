@@ -7,7 +7,11 @@ Authors@R: c(
       role = c("aut", "cre", "cph")),
     person(c("Yuwei"), "Peng", role = c("aut", "cph"))
     )
-Description: Add a description
+Description: The package provides functions that model non-stationary extreme values
+  using univariate extreme value regression modelling, while also performing variable selection
+  to objectively determine the best model for a given dataset. This is achieved by using 
+  generalized linear modelling for each parameter, and by fitting models with maximum 
+  likelihood estimates.
 Imports: graphics,
     methods,
     stats,

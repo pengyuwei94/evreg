@@ -2,7 +2,11 @@
 #'
 #' Brief description of the package
 #'
-#' @details More detail.
+#' @details The package provides functions that model non-stationary extreme values using
+#' univariate extreme value regression modelling, while also performing variable selection
+#' to objectively determine the best model for a given dataset. This is achieved by using
+#' generalized linear modelling for each parameter, and by fitting models with maximum
+#' likelihood estimates.
 #' @seealso \code{\link{gevreg}} GEV generalized linear regression modelling.
 #' @docType package
 #' @name evreg
@@ -71,13 +75,13 @@ NULL
 #'     \item{\code{MDTR}: }{A numeric vector of the mean winter diurnal temperature range.}
 #'     \item{\code{AOindex}: }{A numeric vector of the North Atlantic Oscillation index (AOindex) from 1927 through 1995}
 #'  }
-#' @source Eric Gilleland, Richard W. Katz (2016). extRemes 2.0: An Extreme Value Analysis Package
+#' @references Eric Gilleland, Richard W. Katz (2016). extRemes 2.0: An Extreme Value Analysis Package
 #'     in R. Journal of Statistical Software, 72(8), 1-39. doi:10.18637/jss.v072.i08
 "PORTw"
 
 #' Annual Winter Maximum Wave Height
 #'
-#' Annual Winter Maximum Wave Height in the North Sea from from 1/10/1954 to 31/3/2010,
+#' Annual Winter Maximum Wave Height in the North Sea from 1/10/1954 to 31/3/2010,
 #' that is, the winters from 56 water years.
 #'
 #' @format A dataframe contains 56 rows and 6 variables

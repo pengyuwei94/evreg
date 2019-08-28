@@ -9,7 +9,11 @@
 Brief description of the package
 }
 \details{
-More detail.
+The package provides functions that model non-stationary extreme values using
+univariate extreme value regression modelling, while also performing variable selection
+to objectively determine the best model for a given dataset. This is achieved by using
+generalized linear modelling for each parameter, and by fitting models with maximum
+likelihood estimates.
 }
 \seealso{
 \code{\link{gevreg}} GEV generalized linear regression modelling.

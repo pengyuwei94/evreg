@@ -33,9 +33,6 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
 \description{
 Drop a single term to either mu, sigma, and xi based on AIC.
 }
-\details{
-Add details.
-}
 \examples{
 
 ### Annual Maximum and Minimum Temperature

@@ -7,9 +7,9 @@
 compare_pvalue(model1, model2)
 }
 \arguments{
-\item{model1}{A model of class "evreg" which has to be nested within model 2.}
+\item{model1}{A model of class \code{c("gev", "evreg")}.}
 
-\item{model2}{A model of class "evreg".}
+\item{model2}{A model of class \code{c("gev", "evreg")}.}
 }
 \value{
 A numeric number that is between 0 to 1.
@@ -20,7 +20,8 @@ Compare two evreg objects by using chi-squared distritbuion
 \details{
 compare_pvalue(model1, model2)
 
-Add details.
+
+Model 1 has to be nested within model 2
 }
 \examples{
 

@@ -35,9 +35,6 @@ An object (a list) of class \code{c("gev", "evreg")} summarising
 \description{
 Add a single term to either mu, sigma, and xi based on individual p value from Wald test.
 }
-\details{
-Add details.
-}
 \examples{
 
 ### Fremantle sea levels
