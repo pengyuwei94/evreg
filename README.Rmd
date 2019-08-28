@@ -27,6 +27,7 @@ One of the main functions in the evreg package is `gevreg`, which performs the m
 The following code fits a GEV regression model using the `gevreg` function for `fremantle` dataset and then uses `forward_gevreg` perform forward selection.
 
 ```{r}
+library(evreg)
 data <- fremantle[ , -which(names(fremantle) %in% c("Year"))]
 fit0 <- gevreg(SeaLevel, data)
 forward_gevreg(fit0)
