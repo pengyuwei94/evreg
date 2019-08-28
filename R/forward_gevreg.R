@@ -33,7 +33,7 @@
 #'     \item{added_covariate}{A character vector shows added covariate}
 #'     \item{criterion_value}{criterion value for if both input model and output model
 #'     are different.}
-#'
+#' @seealso \code{\link{gevreg}}
 #' @examples
 #' ### Annual Maximum and Minimum Temperature
 #'

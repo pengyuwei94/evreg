@@ -57,3 +57,6 @@ P0 <- gevreg(y = TMX1, data = PORTw[, -1])
 forward_gevreg(P0)
 
 }
+\seealso{
+\code{\link{gevreg}}
+}

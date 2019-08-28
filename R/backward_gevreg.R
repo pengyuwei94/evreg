@@ -33,6 +33,7 @@
 #'     \item{dropped_covariate}{A character vector shows dropped covariate}
 #'     \item{criterion_value}{criterion value for if both input model and output model
 #'     are different.}
+#' @seealso \code{\link{gevreg}}
 #' @examples
 #' ### Annual Maximum and Minimum Temperature
 #'

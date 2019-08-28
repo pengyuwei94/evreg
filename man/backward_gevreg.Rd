@@ -58,3 +58,6 @@ P6 <- gevreg(y = TMX1, data = PORTw[, -1], mu = ~MTMAX + AOindex + STDTMAX + STD
 backward_gevreg(P6)
 
 }
+\seealso{
+\code{\link{gevreg}}
+}
